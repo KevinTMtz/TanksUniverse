@@ -125,8 +125,8 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 tankMove = Transformations.TranslateM(tankPos.x, 0, tankPos.z);
 
         // Apply transformation to body
-        Matrix4x4 bodyToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-Body.transform.position.x), 0, -(Tower.transform.position.z-Body.transform.position.z));
-        Matrix4x4 bodyToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-Body.transform.position.x, 0, (Tower.transform.position.z-Body.transform.position.z));
+        Matrix4x4 bodyToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, Body.transform.position, -1);
+        Matrix4x4 bodyToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, Body.transform.position, 1);
 
         Matrix4x4 bodyT = tankMove * bodyToTowerPivot2 * tankRotY * bodyToTowerPivot1;
 
@@ -136,8 +136,8 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 canonRotationX = Transformations.RotateM(canonRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 towerRotationY = Transformations.RotateM(towerRotAY, Transformations.AXIS.AX_Y);
 
-        Matrix4x4 canonToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-Canon.transform.position.x), 0, -(Tower.transform.position.z-Canon.transform.position.z));
-        Matrix4x4 canonToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-Canon.transform.position.x, 0, (Tower.transform.position.z-Canon.transform.position.z));
+        Matrix4x4 canonToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, Canon.transform.position, -1);
+        Matrix4x4 canonToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, Canon.transform.position, 1);
 
         Matrix4x4 towerT = tankMove * towerRotationY * tankRotY;
         Matrix4x4 canonT = tankMove * canonToTowerPivot2 * towerRotationY * canonToTowerPivot1 * canonToTowerPivot2 * tankRotY * canonToTowerPivot1 * canonRotationX;
@@ -149,17 +149,17 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 lWheelRotX = Transformations.RotateM(lWheelRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 rWheelRotX = Transformations.RotateM(rWheelRotAX, Transformations.AXIS.AX_X);
 
-        Matrix4x4 lBackWheelToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-LBackWheel.transform.position.x), 0, -(Tower.transform.position.z-LBackWheel.transform.position.z));
-        Matrix4x4 lBackWheelToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-LBackWheel.transform.position.x, 0, (Tower.transform.position.z-LBackWheel.transform.position.z));
+        Matrix4x4 lBackWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, LBackWheel.transform.position, -1);
+        Matrix4x4 lBackWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, LBackWheel.transform.position, 1);
 
-        Matrix4x4 lFrontWheelToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-LFrontWheel.transform.position.x), 0, -(Tower.transform.position.z-LFrontWheel.transform.position.z));
-        Matrix4x4 lFrontWheelToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-LFrontWheel.transform.position.x, 0, (Tower.transform.position.z-LFrontWheel.transform.position.z));
+        Matrix4x4 lFrontWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, LFrontWheel.transform.position, -1);
+        Matrix4x4 lFrontWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, LFrontWheel.transform.position, 1);
 
-        Matrix4x4 rBackWheelToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-RBackWheel.transform.position.x), 0, -(Tower.transform.position.z-RBackWheel.transform.position.z));
-        Matrix4x4 rBackWheelToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-RBackWheel.transform.position.x, 0, (Tower.transform.position.z-RBackWheel.transform.position.z));
+        Matrix4x4 rBackWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, RBackWheel.transform.position, -1);
+        Matrix4x4 rBackWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, RBackWheel.transform.position, 1);
 
-        Matrix4x4 rFrontWheelToTowerPivot1 = Transformations.TranslateM(-(Tower.transform.position.x-RFrontWheel.transform.position.x), 0, -(Tower.transform.position.z-RFrontWheel.transform.position.z));
-        Matrix4x4 rFrontWheelToTowerPivot2 = Transformations.TranslateM(Tower.transform.position.x-RFrontWheel.transform.position.x, 0, (Tower.transform.position.z-RFrontWheel.transform.position.z));
+        Matrix4x4 rFrontWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, RFrontWheel.transform.position, -1);
+        Matrix4x4 rFrontWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, RFrontWheel.transform.position, 1);
 
         Matrix4x4 lBackWheelT = tankMove * lBackWheelToTowerPivot2 * tankRotY * lBackWheelToTowerPivot1 * lWheelRotX;
         Matrix4x4 lFrontWheelT = tankMove * lFrontWheelToTowerPivot2 * tankRotY * lFrontWheelToTowerPivot1 * lWheelRotX;
@@ -172,5 +172,14 @@ public class PlayerController : MonoBehaviour
 
         MeshUtils.ApplyTransformations(RBackWheel, rBackWheelT, originals[(int) TankParts.RBackWheel]);
         MeshUtils.ApplyTransformations(RFrontWheel, rFrontWheelT, originals[(int) TankParts.RFrontWheel]);
+    }
+
+    Matrix4x4 getTranslateMatrixWithPivot(Vector3 pivotPoint, Vector3 currentPos, int multiplier)
+    {
+        return Transformations.TranslateM(
+            (pivotPoint.x - currentPos.x) * multiplier, 
+            0, 
+            (pivotPoint.z - currentPos.z) * multiplier
+        );
     }
 }
