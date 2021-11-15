@@ -58,6 +58,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale != 0)
+        {
+            UpdateInputValues();
+            ApplyTransformations();
+        }
+    }
+
+    void UpdateInputValues()
+    {
         // Rotate canon
         if (Input.GetAxis("Vertical") != 0) {
             if (canonRotAX >= 30) canonRotAX = 30;
@@ -120,7 +129,10 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Shoot");
         }
+    }
 
+    void ApplyTransformations()
+    {
         Matrix4x4 tankRotY = Transformations.RotateM(tankRotAY, Transformations.AXIS.AX_Y);
         Matrix4x4 tankMove = Transformations.TranslateM(tankPos.x, 0, tankPos.z);
 
