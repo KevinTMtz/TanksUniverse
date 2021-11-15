@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
     float lWheelRotAX;
     float rWheelRotAX;
 
-    public PlayerShotForce playerShotForce;
+    private PlayerShotForce playerShotForce;
+    private PlayerCurrentWeapon playerCurrentWeapon;
 
     enum TankParts
     {
@@ -56,6 +57,9 @@ public class PlayerController : MonoBehaviour
         canonRotAX = 0;
         lWheelRotAX = 0;
         rWheelRotAX = 0;
+
+        playerShotForce = GetComponent<PlayerShotForce>();
+        playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
     }
 
     void Update()
@@ -129,7 +133,16 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || 
                 Input.GetKey("4") || Input.GetKey("5"))
         {
-            Debug.Log("Change Weapon");
+            if (Input.GetKey("1"))
+                playerCurrentWeapon.SetCurrentWeapon(1);
+            else if (Input.GetKey("2"))
+                playerCurrentWeapon.SetCurrentWeapon(2);
+            else if (Input.GetKey("3"))
+                playerCurrentWeapon.SetCurrentWeapon(3);
+            else if (Input.GetKey("4"))
+                playerCurrentWeapon.SetCurrentWeapon(4);
+            else if (Input.GetKey("5"))
+                playerCurrentWeapon.SetCurrentWeapon(5);
         }
         
         // Shoot
