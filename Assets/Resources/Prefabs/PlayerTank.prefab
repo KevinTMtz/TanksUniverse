@@ -577,6 +577,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9196289032596142401}
   - component: {fileID: 9196289032596142400}
+  - component: {fileID: 8499440924079657926}
+  - component: {fileID: 2663887949267667465}
+  - component: {fileID: 2281799929179570499}
   m_Layer: 0
   m_Name: PlayerTank
   m_TagString: Untagged
@@ -624,3 +627,42 @@ MonoBehaviour:
   LFrontWheel: {fileID: 5576993142787317665}
   RBackWheel: {fileID: 3958238164867711161}
   LBackWheel: {fileID: 8152502906578380519}
+  playerShotForce: {fileID: 2663887949267667465}
+  currentWeapon: 0
+--- !u!114 &8499440924079657926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196289032596142402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd4911b7a5974dd495481e51656cbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invinsible: 0
+--- !u!114 &2663887949267667465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196289032596142402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c23266d5341473fb7de11ad0250394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2281799929179570499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196289032596142402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a19621394f558465caed89cd149ccfe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     float lWheelRotAX;
     float rWheelRotAX;
 
+    private PlayerShotForce playerShotForce;
+    private PlayerCurrentWeapon playerCurrentWeapon;
+
     enum TankParts
     {
         Body,
@@ -54,12 +57,25 @@ public class PlayerController : MonoBehaviour
         canonRotAX = 0;
         lWheelRotAX = 0;
         rWheelRotAX = 0;
+
+        playerShotForce = GetComponent<PlayerShotForce>();
+        playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
     }
 
     void Update()
     {
+        if (Time.timeScale != 0)
+        {
+            UpdateInputValues();
+            ApplyTransformations();
+        }
+    }
+
+    void UpdateInputValues()
+    {
         // Rotate canon
-        if (Input.GetAxis("Vertical") != 0) {
+        if (Input.GetAxis("Vertical") != 0)
+        {
             if (canonRotAX >= 30) canonRotAX = 30;
             if (canonRotAX <= -35) canonRotAX = -35;
 
@@ -67,11 +83,13 @@ public class PlayerController : MonoBehaviour
         }
 
         // Rotate tower
-        if (Input.GetKey("q") || Input.GetKey("e")) {
+        if (Input.GetKey("q") || Input.GetKey("e"))
+        {
             towerRotAY += (Input.GetKey("q") ? -1 : 1) * 0.5f;
         }
 
-        if (Input.GetKey("a") || Input.GetKey("d")) {
+        if (Input.GetKey("a") || Input.GetKey("d"))
+        {
             // Move tank forward
             if (Input.GetKey("a") && Input.GetKey("d"))
             {
@@ -105,14 +123,26 @@ public class PlayerController : MonoBehaviour
         // Change projectile force
         if (Input.GetKey("f") || Input.GetKey("r"))
         {
-            Debug.Log("Change Projectile Force: " + (Input.GetKey("f") ? -1 : 1));
+            if(Input.GetKey("f"))
+                playerShotForce.DecreaseForce();
+            else
+                playerShotForce.IncreaseForce();
         }
 
         // Chance weapon
         if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || 
                 Input.GetKey("4") || Input.GetKey("5"))
         {
-            Debug.Log("Change Weapon");
+            if (Input.GetKey("1"))
+                playerCurrentWeapon.SetCurrentWeapon(1);
+            else if (Input.GetKey("2"))
+                playerCurrentWeapon.SetCurrentWeapon(2);
+            else if (Input.GetKey("3"))
+                playerCurrentWeapon.SetCurrentWeapon(3);
+            else if (Input.GetKey("4"))
+                playerCurrentWeapon.SetCurrentWeapon(4);
+            else if (Input.GetKey("5"))
+                playerCurrentWeapon.SetCurrentWeapon(5);
         }
         
         // Shoot
@@ -120,7 +150,10 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Shoot");
         }
+    }
 
+    void ApplyTransformations()
+    {
         Matrix4x4 tankRotY = Transformations.RotateM(tankRotAY, Transformations.AXIS.AX_Y);
         Matrix4x4 tankMove = Transformations.TranslateM(tankPos.x, 0, tankPos.z);
 
