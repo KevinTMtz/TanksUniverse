@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerUI : MonoBehaviour {
+public class PlayerUI : MonoBehaviour
+{
     private bool pauseMenuActive;
     public GameObject pauseMenuBackground;
     public GameObject pauseMenu;
@@ -10,18 +11,21 @@ public class PlayerUI : MonoBehaviour {
     private Scene activeScene;
     private PlayerHealth playerHealth;
     
-    void Start() {
+    void Start() 
+    {
         pauseMenuActive = false;
         activeScene = SceneManager.GetActiveScene();
 
         playerHealth = FindObjectOfType<PlayerHealth>();
     }
     
-    void Update() {
+    void Update() 
+    {
         if (Input.GetKeyDown(KeyCode.Escape) && !playerHealth.IsKill)
             ShowPauseMenu();
 
-        if (playerHealth.IsKill && Time.timeScale != 0) {
+        if (playerHealth.IsKill && Time.timeScale != 0)
+        {
             Time.timeScale = 0;
             pauseMenuBackground.SetActive(true);
             Cursor.visible = true;
@@ -29,7 +33,8 @@ public class PlayerUI : MonoBehaviour {
         }
     }
 
-    public void ShowPauseMenu() {
+    public void ShowPauseMenu()
+    {
         pauseMenuActive = !pauseMenuActive;
         pauseMenuBackground.SetActive(pauseMenuActive);
         pauseMenu.SetActive(pauseMenuActive);
@@ -37,16 +42,19 @@ public class PlayerUI : MonoBehaviour {
         Time.timeScale = pauseMenuActive ? 0 : 1;
     }
 
-    public void Restart() {
+    public void Restart()
+    {
         Time.timeScale = 1;
         SceneManager.LoadScene(activeScene.name);
     }
 
-    public void Continue() {
+    public void Continue()
+    {
         ShowPauseMenu();
     }
 
-    public void ReturnToMenu() {
+    public void ReturnToMenu()
+    {
         SceneManager.LoadScene("MainMenu");
     }
 }

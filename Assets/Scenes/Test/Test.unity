@@ -398,7 +398,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh41474
+  m_Name: pb_Mesh54306
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -667,6 +667,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 172274706921907593, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -76.400024
+      objectReference: {fileID: 0}
+    - target: {fileID: 762660667060732494, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+      propertyPath: m_Name
+      value: ShotForceBar
+      objectReference: {fileID: 0}
     - target: {fileID: 1639210836172362856, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
       propertyPath: m_SizeDelta.x
       value: 30
@@ -795,16 +803,24 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
-    - target: {fileID: 1639210837857859147, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
-      propertyPath: m_PlaneDistance
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1639210837857859188, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
       propertyPath: m_Name
       value: PlayerUI
       objectReference: {fileID: 0}
     - target: {fileID: 2362528119557875160, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7156484086226776388, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7156484086226776388, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7156484086226776388, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9041469324229874233, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}

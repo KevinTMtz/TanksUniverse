@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour {   
+public class PlayerHealth : MonoBehaviour 
+{   
     private int health;
     private bool isKill;
 
@@ -9,12 +10,9 @@ public class PlayerHealth : MonoBehaviour {
     public bool invinsible;
 
     private HealthBar healthBar;
-
-    private GameObject blood1;
-
-    private GameObject bloodHeal1;
     
-    void Start() {
+    void Start()
+    {
         health = 100;
         isKill = false;
 
@@ -22,25 +20,31 @@ public class PlayerHealth : MonoBehaviour {
         healthBar.SetMaxHealth(health);
     }
 
-    void Update() {   
-        if (health == 0 && !isKill) {
+    void Update()
+    {   
+        if (health == 0 && !isKill)
+        {
             isKill = true;
         }
     }
 
-    public void decreaseHealth(int damage) {
-        if (!invinsible) {
+    public void IncreaseHealth(int heal)
+    {
+        health = Math.Min(100, health + heal);
+        healthBar.SetHealth(health);
+    }
+
+    public void DecreaseHealth(int damage)
+    {
+        if (!invinsible)
+        {
             health = Math.Max(0, health - damage);
             healthBar.SetHealth(health);
         }
     }
 
-    public void IncreaseHealth(int heal) {
-        health = Math.Min(100, health + heal);
-        healthBar.SetHealth(health);
-    }
-
-    public bool IsKill {
+    public bool IsKill
+    {
         get { return isKill; }
     }
 }

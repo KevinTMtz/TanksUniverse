@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     float lWheelRotAX;
     float rWheelRotAX;
 
+    public PlayerShotForce playerShotForce;
+
     enum TankParts
     {
         Body,
@@ -68,7 +70,8 @@ public class PlayerController : MonoBehaviour
     void UpdateInputValues()
     {
         // Rotate canon
-        if (Input.GetAxis("Vertical") != 0) {
+        if (Input.GetAxis("Vertical") != 0)
+        {
             if (canonRotAX >= 30) canonRotAX = 30;
             if (canonRotAX <= -35) canonRotAX = -35;
 
@@ -76,11 +79,13 @@ public class PlayerController : MonoBehaviour
         }
 
         // Rotate tower
-        if (Input.GetKey("q") || Input.GetKey("e")) {
+        if (Input.GetKey("q") || Input.GetKey("e"))
+        {
             towerRotAY += (Input.GetKey("q") ? -1 : 1) * 0.5f;
         }
 
-        if (Input.GetKey("a") || Input.GetKey("d")) {
+        if (Input.GetKey("a") || Input.GetKey("d"))
+        {
             // Move tank forward
             if (Input.GetKey("a") && Input.GetKey("d"))
             {
@@ -114,7 +119,10 @@ public class PlayerController : MonoBehaviour
         // Change projectile force
         if (Input.GetKey("f") || Input.GetKey("r"))
         {
-            Debug.Log("Change Projectile Force: " + (Input.GetKey("f") ? -1 : 1));
+            if(Input.GetKey("f"))
+                playerShotForce.DecreaseForce();
+            else
+                playerShotForce.IncreaseForce();
         }
 
         // Chance weapon
