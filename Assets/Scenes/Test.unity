@@ -397,6 +397,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &958937888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4725220416926429410, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 1080411535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,7 +497,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh19668
+  m_Name: pb_Mesh17426
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1364,6 +1375,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1029332368}
     - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: currentGunText
+      value: 
+      objectReference: {fileID: 481919977}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: sliderHealthBar
       value: 
       objectReference: {fileID: 1449988304}
@@ -1371,6 +1386,10 @@ PrefabInstance:
       propertyPath: sliderShotForce
       value: 
       objectReference: {fileID: 523725539}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: towerRotationText
+      value: 
+      objectReference: {fileID: 958937888}
     - target: {fileID: 9196289032596142400, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: PointTower
       value: 

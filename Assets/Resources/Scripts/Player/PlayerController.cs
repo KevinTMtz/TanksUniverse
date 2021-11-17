@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerShotForce playerShotForce;
     private PlayerCurrentWeapon playerCurrentWeapon;
-    private PlayerTankInfoUI PlayerTankInfoUI;
+    private PlayerTankInfoUI playerTankInfoUI;
 
     enum TankParts
     {
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         playerShotForce = GetComponent<PlayerShotForce>();
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
-        PlayerTankInfoUI = GetComponent<PlayerTankInfoUI>();
+        playerTankInfoUI = GetComponent<PlayerTankInfoUI>();
     }
 
     void Update()
@@ -84,13 +84,15 @@ public class PlayerController : MonoBehaviour
 
             canonRotAX -= Input.GetAxis("Vertical") * 0.5f;
 
-            PlayerTankInfoUI.SetCanonRotAXText(canonRotAX);
+            playerTankInfoUI.SetCanonRotAXText(canonRotAX);
         }
 
         // Rotate tower
         if (Input.GetKey("q") || Input.GetKey("e"))
         {
             towerRotAY += (Input.GetKey("q") ? -1 : 1) * 0.5f;
+
+            playerTankInfoUI.SetTowerRotationText(towerRotAY);
         }
 
         if (Input.GetKey("a") || Input.GetKey("d"))

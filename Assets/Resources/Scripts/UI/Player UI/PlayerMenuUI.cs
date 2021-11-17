@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerUI : MonoBehaviour
+public class PlayerMenuUI : MonoBehaviour
 {
     private bool pauseMenuActive;
     public GameObject pauseMenuBackground;
