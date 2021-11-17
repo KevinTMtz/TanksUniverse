@@ -762,7 +762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 172274706921907593}
   - component: {fileID: 4895625927489861845}
-  - component: {fileID: 4383388533793447781}
   m_Layer: 5
   m_Name: ShotForceBar
   m_TagString: Untagged
@@ -844,19 +843,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4383388533793447781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762660667060732494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5c9dcefe469348d8aabf6e2649e4564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 4895625927489861845}
 --- !u!1 &1536162239924096570
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,7 +921,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Canon Rot-X: 69'
+  m_Text: 'Canon Rot-X: 0'
 --- !u!1 &1592427964958624526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,7 +1000,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Tower Rot-Y: 90'
+  m_Text: 'Tower Rot-Y: 0'
 --- !u!1 &1639210836172362859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,7 +1434,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1639210837918489046}
   - component: {fileID: 1639210837918489047}
-  - component: {fileID: 2324054239609742247}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -1530,19 +1515,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2324054239609742247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1639210837918489041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7aea1367d3cc4e0999b8332a4354339, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 1639210837918489047}
 --- !u!1 &1865208371804899883
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,7 +1593,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Pos: (1, 2, 3)'
+  m_Text: 'Pos: (0, 0, 0)'
 --- !u!1 &2336438791328713083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,7 +2340,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Tank ROT-Y: 45'
+  m_Text: 'Tank ROT-Y: 0'
 --- !u!1 &5417380005095689448
 GameObject:
   m_ObjectHideFlags: 0
@@ -2736,7 +2708,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Wind Force: 99'
+  m_Text: 'Wind Force: 0'
 --- !u!1 &7126932041320658749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2894,7 +2866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Wind ROT-Y: 25'
+  m_Text: 'Wind ROT-Y: 0'
 --- !u!1 &8205033764779800420
 GameObject:
   m_ObjectHideFlags: 0

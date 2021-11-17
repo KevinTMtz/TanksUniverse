@@ -9,15 +9,15 @@ public class PlayerHealth : MonoBehaviour
     [HideInInspector]
     public bool invinsible;
 
-    private HealthBar healthBar;
+    private PlayerTankInfoUI PlayerTankInfoUI;
     
     void Start()
     {
         health = 100;
         isKill = false;
 
-        healthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
-        healthBar.SetMaxHealth(health);
+        PlayerTankInfoUI = gameObject.GetComponent<PlayerTankInfoUI>();
+        PlayerTankInfoUI.SetMaxHealth(health);
     }
 
     void Update()
@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
     public void IncreaseHealth(int heal)
     {
         health = Math.Min(100, health + heal);
-        healthBar.SetHealth(health);
+        PlayerTankInfoUI.SetHealth(health);
     }
 
     public void DecreaseHealth(int damage)
@@ -39,7 +39,7 @@ public class PlayerHealth : MonoBehaviour
         if (!invinsible)
         {
             health = Math.Max(0, health - damage);
-            healthBar.SetHealth(health);
+            PlayerTankInfoUI.SetHealth(health);
         }
     }
 

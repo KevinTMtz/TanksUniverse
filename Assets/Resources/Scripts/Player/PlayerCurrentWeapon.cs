@@ -12,7 +12,7 @@ public class PlayerCurrentWeapon : MonoBehaviour
     public void SetCurrentWeapon(int weaponNum)
     {
         currentWeapon = weaponNum;
-        currentGunText.text = $"{currentWeapon}";
+        currentGunText.text = $"Weapon {currentWeapon}";
     }
 
     public int CurrentWeapon

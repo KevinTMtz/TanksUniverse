@@ -227,6 +227,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &523725539 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4895625927489861845, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 1080411535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,6 +644,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1029332368 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2274313398520967749, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 1080411535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1080411535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -904,7 +926,9 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2324054239609742247, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+    - {fileID: 4383388533793447781, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
 --- !u!114 &1080411536 stripped
 MonoBehaviour:
@@ -926,6 +950,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a19621394f558465caed89cd149ccfe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1449988304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1639210837918489047, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 1080411535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1516179291
@@ -1324,6 +1359,18 @@ PrefabInstance:
       propertyPath: shotForceText
       value: 
       objectReference: {fileID: 1080411536}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: canonRotAXText
+      value: 
+      objectReference: {fileID: 1029332368}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: sliderHealthBar
+      value: 
+      objectReference: {fileID: 1449988304}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: sliderShotForce
+      value: 
+      objectReference: {fileID: 523725539}
     - target: {fileID: 9196289032596142400, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: PointTower
       value: 

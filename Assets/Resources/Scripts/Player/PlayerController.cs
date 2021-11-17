@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerShotForce playerShotForce;
     private PlayerCurrentWeapon playerCurrentWeapon;
+    private PlayerTankInfoUI PlayerTankInfoUI;
 
     enum TankParts
     {
@@ -60,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
         playerShotForce = GetComponent<PlayerShotForce>();
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
+        PlayerTankInfoUI = GetComponent<PlayerTankInfoUI>();
     }
 
     void Update()
@@ -80,6 +83,8 @@ public class PlayerController : MonoBehaviour
             if (canonRotAX <= -35) canonRotAX = -35;
 
             canonRotAX -= Input.GetAxis("Vertical") * 0.5f;
+
+            PlayerTankInfoUI.SetCanonRotAXText(canonRotAX);
         }
 
         // Rotate tower

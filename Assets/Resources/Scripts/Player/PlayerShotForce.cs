@@ -10,7 +10,7 @@ public class PlayerShotForce : MonoBehaviour
 
     private float forceDelta;
     
-    private ShotForceBar shotForceBar;
+    private PlayerTankInfoUI PlayerTankInfoUI;
     public Text shotForceText;
     
     void Start()
@@ -18,7 +18,7 @@ public class PlayerShotForce : MonoBehaviour
         force = 50;
         forceDelta = 0.1f;
 
-        shotForceBar = GameObject.Find("ShotForceBar").GetComponent<ShotForceBar>();
+        PlayerTankInfoUI = gameObject.GetComponent<PlayerTankInfoUI>();
         
         UpdateUI();
     }
@@ -39,7 +39,7 @@ public class PlayerShotForce : MonoBehaviour
 
     void UpdateUI()
     {
-        shotForceBar.SetForce((int) force);
+        PlayerTankInfoUI.SetForce((int) force);
         shotForceText.text = ((int) force).ToString();
     }
 
