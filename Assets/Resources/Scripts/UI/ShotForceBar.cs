@@ -5,8 +5,8 @@ public class ShotForceBar : MonoBehaviour
 {
     public Slider slider;
 
-    public void SetForce(float force)
+    public void SetForce(int force)
     {
-        slider.value = (int) force;
+        slider.value = force;
     }
 }
