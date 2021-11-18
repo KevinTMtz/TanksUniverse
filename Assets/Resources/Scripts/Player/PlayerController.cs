@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private PlayerCurrentWeapon playerCurrentWeapon;
     private PlayerTankInfoUI playerTankInfoUI;
 
+    public Camera playerCamera;
+
     enum TankParts
     {
         Body,
@@ -96,9 +98,13 @@ public class PlayerController : MonoBehaviour
         // Rotate tower
         if (Input.GetKey("q") || Input.GetKey("e"))
         {
-            towerRotAY += (Input.GetKey("q") ? -1 : 1) * 0.5f;
+            float deltaTowerRotAY = (Input.GetKey("q") ? -1 : 1) * 0.5f;
+
+            towerRotAY += deltaTowerRotAY;
 
             playerTankInfoUI.SetTowerRotationText(towerRotAY);
+
+            RotateCameraWithPivot(deltaTowerRotAY);
         }
 
         if (Input.GetKey("a") || Input.GetKey("d"))
@@ -109,17 +115,23 @@ public class PlayerController : MonoBehaviour
                 lWheelRotAX += 0.75f;
                 rWheelRotAX += 0.75f;
 
-                tankPos = new Vector3(
-                    tankPos.x + Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * 0.01f, 
-                    0, 
-                    tankPos.z + Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f
-                );
+                float deltaMoveX = Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * 0.01f;
+                float deltaMoveY = Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f;
+
+                tankPos = new Vector3(tankPos.x + deltaMoveX, 0, tankPos.z + deltaMoveY);
 
                 playerTankInfoUI.SetTankPositionText(new Vector3(
                     transform.position.x + tankPos.x,
                     transform.position.y,
                     transform.position.z + tankPos.z
                 ));
+
+                // Move player camera
+                playerCamera.transform.position = new Vector3(
+                    playerCamera.transform.position.x + deltaMoveX,
+                    playerCamera.transform.position.y,
+                    playerCamera.transform.position.z + deltaMoveY
+                );
             }
             // Rotate tank left
             else if (Input.GetKey("a"))
@@ -128,6 +140,8 @@ public class PlayerController : MonoBehaviour
                 rWheelRotAX += 0.75f;
 
                 tankRotAY -= 0.5f;
+
+                RotateCameraWithPivot(-0.5f);
             }
             // Rotate tank right
             else if (Input.GetKey("d"))
@@ -136,6 +150,8 @@ public class PlayerController : MonoBehaviour
                 rWheelRotAX -= 0.75f;
 
                 tankRotAY += 0.5f;
+
+                RotateCameraWithPivot(0.5f);
             }
 
             playerTankInfoUI.SetTankRotationText(tankRotAY);
@@ -226,6 +242,15 @@ public class PlayerController : MonoBehaviour
 
         MeshUtils.ApplyTransformations(RBackWheel, rBackWheelT, originals[(int) TankParts.RBackWheel]);
         MeshUtils.ApplyTransformations(RFrontWheel, rFrontWheelT, originals[(int) TankParts.RFrontWheel]);
+    }
+
+    void RotateCameraWithPivot(float deltaCameraRotAY)
+    {
+        playerCamera.transform.RotateAround(new Vector3(
+            Tower.transform.position.x + tankPos.x,
+            0,
+            Tower.transform.position.z + tankPos.z
+        ), Vector3.up, deltaCameraRotAY);
     }
 
     Matrix4x4 getTranslateMatrixWithPivot(Vector3 pivotPoint, Vector3 currentPos, int multiplier)

@@ -64,6 +64,6 @@ public class PlayerTankInfoUI : MonoBehaviour
 
     public void SetTankRotationText(float tankRotAY)
     {
-        tankRotationText.text = $"Tower Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 365) + tankRotAY % 365)}";
+        tankRotationText.text = $"Tank Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 365) + tankRotAY % 365)}";
     }
 }
