@@ -50,4 +50,12 @@ public class PlayerTankInfoUI : MonoBehaviour
     {
         towerRotationText.text = $"Tower Rot-Y: {(int) ((towerRotAY > 0 ? 0 : 365) + towerRotAY % 365)}";
     }
+
+    // Tank Position
+    public Text tankPositionText;
+
+    public void SetTankPositionText(Vector3 tankPos)
+    {
+        tankPositionText.text = $"Tank Pos: {tankPos.ToString("F2")}";
+    }
 }

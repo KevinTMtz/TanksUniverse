@@ -579,7 +579,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -15, y: 116}
-  m_SizeDelta: {x: 300, y: 100}
+  m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &1606201307697845079
 CanvasRenderer:
@@ -1593,7 +1593,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: 'Pos: (0, 0, 0)'
+  m_Text: 'Tank Pos: (0, 0, 0)'
 --- !u!1 &2336438791328713083
 GameObject:
   m_ObjectHideFlags: 0

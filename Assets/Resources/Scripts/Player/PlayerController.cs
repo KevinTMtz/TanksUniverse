@@ -63,6 +63,12 @@ public class PlayerController : MonoBehaviour
         playerShotForce = GetComponent<PlayerShotForce>();
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
         playerTankInfoUI = GetComponent<PlayerTankInfoUI>();
+
+        playerTankInfoUI.SetTankPositionText(new Vector3(
+            transform.position.x + tankPos.x,
+            transform.position.y,
+            transform.position.z + tankPos.z
+        ));
     }
 
     void Update()
@@ -108,6 +114,12 @@ public class PlayerController : MonoBehaviour
                     0, 
                     tankPos.z + Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f
                 );
+
+                playerTankInfoUI.SetTankPositionText(new Vector3(
+                    transform.position.x + tankPos.x,
+                    transform.position.y,
+                    transform.position.z + tankPos.z
+                ));
             }
             // Rotate tank left
             else if (Input.GetKey("a"))
