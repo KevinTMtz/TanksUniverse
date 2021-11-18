@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY += 0.5f;
             }
+
+            playerTankInfoUI.SetTankRotationText(tankRotAY);
         }
 
         // Change projectile force
