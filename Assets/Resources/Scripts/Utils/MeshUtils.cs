@@ -17,6 +17,7 @@ public class MeshUtils
 
     m.vertices = transformed;
     m.RecalculateNormals();
+    m.RecalculateBounds();
   }
 
   public static void ExtractVertices(GameObject go, List<Vector3[]> orig, string name = null)
