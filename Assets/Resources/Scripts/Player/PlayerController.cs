@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerShotForce playerShotForce;
     private PlayerCurrentWeapon playerCurrentWeapon;
+    private PlayerTankInfoUI playerTankInfoUI;
 
     enum TankParts
     {
@@ -60,6 +62,13 @@ public class PlayerController : MonoBehaviour
 
         playerShotForce = GetComponent<PlayerShotForce>();
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
+        playerTankInfoUI = GetComponent<PlayerTankInfoUI>();
+
+        playerTankInfoUI.SetTankPositionText(new Vector3(
+            transform.position.x + tankPos.x,
+            transform.position.y,
+            transform.position.z + tankPos.z
+        ));
     }
 
     void Update()
@@ -80,12 +89,16 @@ public class PlayerController : MonoBehaviour
             if (canonRotAX <= -35) canonRotAX = -35;
 
             canonRotAX -= Input.GetAxis("Vertical") * 0.5f;
+
+            playerTankInfoUI.SetCanonRotAXText(canonRotAX);
         }
 
         // Rotate tower
         if (Input.GetKey("q") || Input.GetKey("e"))
         {
             towerRotAY += (Input.GetKey("q") ? -1 : 1) * 0.5f;
+
+            playerTankInfoUI.SetTowerRotationText(towerRotAY);
         }
 
         if (Input.GetKey("a") || Input.GetKey("d"))
@@ -101,6 +114,12 @@ public class PlayerController : MonoBehaviour
                     0, 
                     tankPos.z + Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f
                 );
+
+                playerTankInfoUI.SetTankPositionText(new Vector3(
+                    transform.position.x + tankPos.x,
+                    transform.position.y,
+                    transform.position.z + tankPos.z
+                ));
             }
             // Rotate tank left
             else if (Input.GetKey("a"))
@@ -118,6 +137,8 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY += 0.5f;
             }
+
+            playerTankInfoUI.SetTankRotationText(tankRotAY);
         }
 
         // Change projectile force

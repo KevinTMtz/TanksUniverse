@@ -7,12 +7,25 @@ public class PlayerCurrentWeapon : MonoBehaviour
 {
     private int currentWeapon;
 
-    public Text currentGunText;
+    private PlayerTankInfoUI playerTankInfoUI;
+
+    void Start()
+    {
+        currentWeapon = 1;
+
+        playerTankInfoUI = gameObject.GetComponent<PlayerTankInfoUI>();
+        UpdateUI();
+    }
 
     public void SetCurrentWeapon(int weaponNum)
     {
         currentWeapon = weaponNum;
-        currentGunText.text = $"{currentWeapon}";
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        playerTankInfoUI.SetCurrentWeaponText(currentWeapon);
     }
 
     public int CurrentWeapon
