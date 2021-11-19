@@ -20,9 +20,14 @@ public class ProjectileController : MonoBehaviour
 
     public bool colliding;
 
+    private float gravityForce;
+    public Vector3 shootForce;
+
     void Start()
     {
-        forces.y = -mass * 9.81f;
+        gravityForce = -mass * 9.81f;
+
+        forces.y = gravityForce + shootForce.y;
 
         forces.x = Random.Range(-5.0f, 5.0f);
         forces.z = Random.Range(-5.0f, 5.0f);
@@ -51,7 +56,7 @@ public class ProjectileController : MonoBehaviour
         }
         else
         {
-            forces.y = -mass * 9.81f;
+            forces.y = gravityForce;
 
             // Atmoshperic Air Resistance
             Vector3 v = (cpos - prev) / Time.deltaTime;
