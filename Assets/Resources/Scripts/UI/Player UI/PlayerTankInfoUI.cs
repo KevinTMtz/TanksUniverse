@@ -48,7 +48,7 @@ public class PlayerTankInfoUI : MonoBehaviour
 
     public void SetTowerRotationText(float towerRotAY)
     {
-        towerRotationText.text = $"Tower Rot-Y: {(int) ((towerRotAY > 0 ? 0 : 365) + towerRotAY % 365)}";
+        towerRotationText.text = $"Tower Rot-Y: {(int) ((towerRotAY > 0 ? 0 : 360) + towerRotAY % 360)}";
     }
 
     // Tank Position
@@ -64,6 +64,8 @@ public class PlayerTankInfoUI : MonoBehaviour
 
     public void SetTankRotationText(float tankRotAY)
     {
-        tankRotationText.text = $"Tank Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 365) + tankRotAY % 365)}";
+        Debug.Log(tankRotAY);
+
+        tankRotationText.text = $"Tank Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 360) + tankRotAY % 360)}";
     }
 }
