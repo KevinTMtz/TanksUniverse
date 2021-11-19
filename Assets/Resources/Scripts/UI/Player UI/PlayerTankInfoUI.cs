@@ -64,8 +64,6 @@ public class PlayerTankInfoUI : MonoBehaviour
 
     public void SetTankRotationText(float tankRotAY)
     {
-        Debug.Log(tankRotAY);
-
         tankRotationText.text = $"Tank Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 360) + tankRotAY % 360)}";
     }
 }

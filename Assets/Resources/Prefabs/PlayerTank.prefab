@@ -577,6 +577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9196289032596142401}
   - component: {fileID: 9196289032596142400}
+  - component: {fileID: 838194039534598334}
   - component: {fileID: 8499440924079657926}
   - component: {fileID: 2663887949267667465}
   - component: {fileID: 2281799929179570499}
@@ -628,6 +629,19 @@ MonoBehaviour:
   LFrontWheel: {fileID: 5576993142787317665}
   RBackWheel: {fileID: 3958238164867711161}
   LBackWheel: {fileID: 8152502906578380519}
+  playerCamera: {fileID: 0}
+--- !u!114 &838194039534598334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196289032596142402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7af0bcc66ba40c986916ddd218c0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8499440924079657926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,3 +698,4 @@ MonoBehaviour:
   currentGunText: {fileID: 0}
   towerRotationText: {fileID: 0}
   tankPositionText: {fileID: 0}
+  tankRotationText: {fileID: 0}

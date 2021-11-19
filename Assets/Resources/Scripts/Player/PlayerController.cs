@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     float lWheelRotAX;
     float rWheelRotAX;
 
+    private PlayerShootController playerShootController;
+
     private PlayerShotForce playerShotForce;
     private PlayerCurrentWeapon playerCurrentWeapon;
     private PlayerTankInfoUI playerTankInfoUI;
@@ -61,6 +63,8 @@ public class PlayerController : MonoBehaviour
         canonRotAX = 0;
         lWheelRotAX = 0;
         rWheelRotAX = 0;
+
+        playerShootController = GetComponent<PlayerShootController>();
 
         playerShotForce = GetComponent<PlayerShotForce>();
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
@@ -185,7 +189,7 @@ public class PlayerController : MonoBehaviour
         // Shoot
         if (Input.GetKey("space"))
         {
-            Debug.Log("Shoot");
+            playerShootController.ShootProjectile();
         }
     }
 
