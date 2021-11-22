@@ -67,4 +67,20 @@ public class PlayerTankInfoUI : MonoBehaviour
     {
         tankRotationText.text = $"Tank Rot-Y: {(int) ((tankRotAY > 0 ? 0 : 360) + tankRotAY % 360)}";
     }
+
+    // Wind Rotation
+    public Text windRotationText;
+
+    public void SetWindRotationText(float windRotAY)
+    {
+        windRotationText.text = $"Wind Rot-Y: {windRotAY}";
+    }
+
+    // Wind Force
+    public Text windForceText;
+
+    public void SetWindForceText(float windForce)
+    {
+        windForceText.text = $"Wind Force: {windForce}";
+    }
 }

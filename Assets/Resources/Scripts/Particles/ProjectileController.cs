@@ -29,9 +29,9 @@ public class ProjectileController : MonoBehaviour
         gravityAcc = 9.81f;
         gravityForce = -mass * gravityAcc;
 
-        forces.x = shootForce.x;
+        forces.x = shootForce.x + WindController.Wind.x;
         forces.y = gravityForce + shootForce.y;
-        forces.z = shootForce.z;
+        forces.z = shootForce.z + WindController.Wind.z;
 
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.SetParent(transform);
