@@ -177,11 +177,11 @@ public class PlayerController : MonoBehaviour
         
         // Rotate canon
         float deltaCanonRotAX = -Input.GetAxis("Vertical") * 0.5f;
-        if (
-            Input.GetAxis("Vertical") != 0 && 
-            !(canonRotAX + deltaCanonRotAX > 31) && !(canonRotAX + deltaCanonRotAX < -36)
-        )
+        if (Input.GetAxis("Vertical") != 0)
         {
+            if (canonRotAX + deltaCanonRotAX > 30) deltaCanonRotAX = 30 - canonRotAX;
+            else if (canonRotAX + deltaCanonRotAX < -45) deltaCanonRotAX = -45 - canonRotAX;
+
             canonRotAX += deltaCanonRotAX;
 
             playerTankInfoUI.SetCanonRotAXText(canonRotAX);

@@ -18,7 +18,7 @@ public class PlayerShootController : MonoBehaviour
         projectileController.mass = 5;
         projectileController.restitution = 0.2f;
 
-        Vector3 forceVector = shootPointDirection.normalized * (75 + 25 * (shotForce / 100));
+        Vector3 forceVector = shootPointDirection.normalized * (50 + 35 * (shotForce / 100));
         projectileController.shootForce = forceVector;
 
         Destroy(newProjectile, 10);
