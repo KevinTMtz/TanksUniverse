@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
 
     private PlayerTankInfoUI playerTankInfoUI;
 
+    private bool ableToShoot;
+
     void Start()
     {
         tankPartsArr = new GameObject[] { 
@@ -79,6 +81,8 @@ public class PlayerController : MonoBehaviour
             transform.position.y,
             transform.position.z + tankPosDelta.z
         ));
+
+        ableToShoot = true;
     }
 
     void Update()
@@ -217,8 +221,10 @@ public class PlayerController : MonoBehaviour
         }
         
         // Shoot
-        if (Input.GetKey("space"))
+        if (Input.GetKey("space") && ableToShoot)
         {
+            ableToShoot = false;
+
             playerShootController.ShootProjectile(
                 shootPoint.transform.position,
                 shootPoint.transform.forward,

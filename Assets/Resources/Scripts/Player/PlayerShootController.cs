@@ -11,16 +11,16 @@ public class PlayerShootController : MonoBehaviour
 
         ProjectileController projectileController = newProjectile.AddComponent<ProjectileController>();
         
-        projectileController.cpos = posCannon;
-        projectileController.prev = projectileController.cpos;
+        projectileController.currentPos = posCannon;
+        projectileController.prevPos = projectileController.currentPos;
 
         projectileController.r = 0.15f;
         projectileController.mass = 5;
-        projectileController.restitution = 0.05f;
+        projectileController.restitution = 0.2f;
 
-        Vector3 forceVector = shootPointDirection.normalized * (200 + 50 * (shotForce / 100));
+        Vector3 forceVector = shootPointDirection.normalized * (75 + 25 * (shotForce / 100));
         projectileController.shootForce = forceVector;
 
-        Destroy(newProjectile, 2);
+        Destroy(newProjectile, 10);
     }
 }

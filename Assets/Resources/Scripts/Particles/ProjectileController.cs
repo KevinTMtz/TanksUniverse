@@ -6,95 +6,117 @@ public class ProjectileController : MonoBehaviour
 {
     public float mass;
     public float r;
-    public Vector3 cpos; // Current position
-    public Vector3 prev; // Previous position
+
+    public Vector3 currentPos;
+    public Vector3 prevPos;
     public Vector3 forces;
-    public Vector3 accel; // Acceleration
+    public Vector3 accel;
+
     public float restitution;
 
-    float dt; // Delta time
+    float dt;
 
     public GameObject sphere;
 
-    public Color color;
-
-    public bool colliding;
-
+    private float gravityAcc;
     private float gravityForce;
     public Vector3 shootForce;
 
+    private int bounces;
+
     void Start()
     {
-        gravityForce = -mass * 9.81f;
+        gravityAcc = 9.81f;
+        gravityForce = -mass * gravityAcc;
 
+        forces.x = shootForce.x;
         forces.y = gravityForce + shootForce.y;
-
-        forces.x = Random.Range(-5.0f, 5.0f);
-        forces.z = Random.Range(-5.0f, 5.0f);
+        forces.z = shootForce.z;
 
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.SetParent(transform);
 
-        sphere.transform.position = cpos;
+        sphere.transform.position = currentPos;
         sphere.transform.localScale = new Vector3(r*2, r*2, r*2);
 
         Renderer rend = sphere.GetComponent<Renderer>();
+        rend.material.SetColor("_Color", Color.black);
 
-        color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-        rend.material.SetColor("_Color", color);
+        bounces = 0;
     }
 
     void Update()
     {
         dt = Time.deltaTime;
 
-        if (Mathf.Abs(cpos.y - prev.y) < 0.00001f && Mathf.Abs(cpos.y - r) < 0.00001f)
+        if (
+            Mathf.Abs(currentPos.y - prevPos.y) < 0.001f && 
+            Mathf.Abs(currentPos.y - r) < 0.001f ||
+            bounces > 1
+        )
         {
-            cpos.y = r;
-            prev.y = r;
-            forces.y = 0;
+            StopBall();
+            Destroy(gameObject, 5);
         }
         else
         {
-            forces.y = gravityForce;
+            shootForce.y -= gravityAcc * dt;
+            forces.y = gravityForce + Mathf.Max(shootForce.y, 0);
 
             // Atmoshperic Air Resistance
-            Vector3 v = (cpos - prev) / Time.deltaTime;
-            if (cpos.y > prev.y) // Going up
+            Vector3 v = (currentPos - prevPos) / dt;
+
+            // Going up
+            if (currentPos.y > prevPos.y)
             {
                 forces.y -= r * 0.00001f * v.magnitude;
             }
-            else if (cpos.y < prev.y) // Going down
+            // Going down
+            else if (currentPos.y < prevPos.y)
             {
                 forces.y += r * 0.00001f * v.magnitude;
             }
 
-            Vector3 tempCPos = cpos;
+            Vector3 tempcurrentPos = currentPos;
             accel = forces / mass;
-            cpos = 2 * cpos - prev + accel * dt * dt; // Varlet's integration method
-            prev = tempCPos;
-            sphere.transform.localPosition = cpos;
+
+            // Varlet's integration method
+            currentPos = 2 * currentPos - prevPos + accel * dt * dt;
+
+            prevPos = tempcurrentPos;
+            sphere.transform.position = currentPos;
+
             CollisionFloor();
         }
     }
 
     void CollisionFloor()
     {
-        if (cpos.y <= r)
+        if (currentPos.y <= r)
         {
-            prev.y = cpos.y;
-            cpos.y = r;
+            bounces++;
+
+            prevPos.y = currentPos.y;
+            currentPos.y = r;
+            
             forces.y = -forces.y * restitution;
         }
+    }
+
+    void StopBall()
+    {
+        currentPos.y = r;
+        prevPos.y = r;
+        forces = new Vector3(0, 0, 0);
     }
 
     public bool CheckCollision(ProjectileController other)
     {
         float sumR = r + other.r;
 
-        float dx = cpos.x - other.cpos.x;
-        float dy = cpos.y - other.cpos.y;
-        float dz = cpos.z - other.cpos.z;
+        float dx = currentPos.x - other.currentPos.x;
+        float dy = currentPos.y - other.currentPos.y;
+        float dz = currentPos.z - other.currentPos.z;
 
         float distance2 = dx * dx + dy * dy + dz * dz;
 
