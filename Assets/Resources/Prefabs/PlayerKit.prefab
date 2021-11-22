@@ -451,6 +451,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2993730998127209374 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 902766262275729882, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 2669679493501960772}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &144966618917847972 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2814640940733891040, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
+  m_PrefabInstance: {fileID: 2669679493501960772}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7473557991971820495 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4808703381517848971, guid: 86eea3e074bb2455abe810b2d43302ac, type: 3}
@@ -500,6 +522,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2107505091759111187}
     - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: windForceText
+      value: 
+      objectReference: {fileID: 2993730998127209374}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: canonRotAXText
       value: 
       objectReference: {fileID: 4216319944923852801}
@@ -523,6 +549,10 @@ PrefabInstance:
       propertyPath: tankRotationText
       value: 
       objectReference: {fileID: 2305854752252827176}
+    - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: windRotationText
+      value: 
+      objectReference: {fileID: 144966618917847972}
     - target: {fileID: 7567038915836422507, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: towerRotationText
       value: 

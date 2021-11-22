@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindController : MonoBehaviour
+public class WindController
 {
     private static float force;
     private static float angle;
@@ -17,7 +17,7 @@ public class WindController : MonoBehaviour
 
     public static void SetRandomWind()
     {
-        force = Random.Range(0, 15f);
+        force = Random.Range(0, 10f);
         angle = Random.Range(0, 360);
 
         float windX = Mathf.Sin(Mathf.Deg2Rad * angle) * force;
@@ -29,5 +29,15 @@ public class WindController : MonoBehaviour
     public static Vector3 Wind
     {
         get { return wind; }
+    }
+
+    public static float Force
+    {
+        get { return force; }
+    }
+
+    public static float Angle
+    {
+        get{ return angle; }
     }
 }
