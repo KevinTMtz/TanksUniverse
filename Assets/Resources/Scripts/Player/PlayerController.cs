@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public GameObject shootPoint;
     public GameObject canonPoint;
 
+    private GameObject[] tankPartsArr;
     private List<Vector3[]> originals;
 
     private Vector3 tankPosDelta;
@@ -32,23 +33,22 @@ public class PlayerController : MonoBehaviour
 
     private PlayerShotForce playerShotForce;
     private PlayerCurrentWeapon playerCurrentWeapon;
+
     private PlayerTankInfoUI playerTankInfoUI;
-
-    Vector3 directionRotCanonPoint;
-
-    enum TankParts
-    {
-        Body,
-        Tower,
-        Canon,
-        RFrontWheel,
-        LFrontWheel,
-        RBackWheel,
-        LBackWheel
-    }
 
     void Start()
     {
+        tankPartsArr = new GameObject[] { 
+            Body,
+            Tower,
+            Canon,
+            RFrontWheel,
+            LFrontWheel,
+            RBackWheel,
+            LBackWheel
+        }; 
+        
+        // Extract Vertices
         originals = new List<Vector3[]>();
 
         MeshUtils.ExtractVertices(Body, originals);
@@ -79,8 +79,6 @@ public class PlayerController : MonoBehaviour
             transform.position.y,
             transform.position.z + tankPosDelta.z
         ));
-
-        directionRotCanonPoint = canonPoint.transform.position - Tower.transform.position;
     }
 
     void Update()
@@ -139,8 +137,9 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY -= 0.5f;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, -0.5f, Vector3.up);
-                RotateGOWithPivot(shootPoint, towerPos, -0.5f, Vector3.up);
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, -0.5f, Vector3.up, true);
+                RotateGOWithPivot(shootPoint, towerPos, -0.5f, Vector3.up, true);
+                RotateGOWithPivot(canonPoint, Tower.transform.position, -0.5f, Vector3.up, false);
             }
             // Rotate tank right
             else if (Input.GetKey("d"))
@@ -150,8 +149,9 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY += 0.5f;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, 0.5f, Vector3.up);
-                RotateGOWithPivot(shootPoint, towerPos, 0.5f, Vector3.up);
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, 0.5f, Vector3.up, true);
+                RotateGOWithPivot(shootPoint, towerPos, 0.5f, Vector3.up, true);
+                RotateGOWithPivot(canonPoint, Tower.transform.position, 0.5f, Vector3.up, false);
             }
 
             playerTankInfoUI.SetTankRotationText(tankRotAY);
@@ -166,14 +166,10 @@ public class PlayerController : MonoBehaviour
 
             playerTankInfoUI.SetTowerRotationText(towerRotAY);
 
-            RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTowerRotAY, Vector3.up);
-            RotateGOWithPivot(shootPoint, towerPos, deltaTowerRotAY, Vector3.up);
+            RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTowerRotAY, Vector3.up, true);
+            RotateGOWithPivot(shootPoint, towerPos, deltaTowerRotAY, Vector3.up, true);
+            RotateGOWithPivot(canonPoint, Tower.transform.position, deltaTowerRotAY, Vector3.up, false);
         }
-
-        // Rotate canon base point around the pivot
-        Quaternion rotCanonPointAY = Quaternion.AngleAxis(towerRotAY + tankRotAY, Vector3.up);
-        canonPoint.transform.position = Tower.transform.position + rotCanonPointAY * directionRotCanonPoint;
-        canonPoint.transform.localRotation = rotCanonPointAY;
         
         // Rotate canon
         float deltaCanonRotAX = -Input.GetAxis("Vertical") * 0.5f;
@@ -190,7 +186,8 @@ public class PlayerController : MonoBehaviour
                 shootPoint,
                 canonPoint.transform.position,
                 deltaCanonRotAX,
-                shootPoint.transform.right
+                shootPoint.transform.right,
+                true
             );
         }
 
@@ -235,67 +232,52 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 tankRotY = Transformations.RotateM(tankRotAY, Transformations.AXIS.AX_Y);
         Matrix4x4 tankMove = Transformations.TranslateM(tankPosDelta.x, 0, tankPosDelta.z);
 
-        // Apply transformation to body
-        Matrix4x4 bodyToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, Body.transform.position, -1);
-        Matrix4x4 bodyToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, Body.transform.position, 1);
-
-        Matrix4x4 bodyT = tankMove * bodyToTowerPivot2 * tankRotY * bodyToTowerPivot1;
-
-        MeshUtils.ApplyTransformations(Body, bodyT, originals[(int) TankParts.Body]);
-
-        // Apply transformations to tower and canon
         Matrix4x4 canonRotationX = Transformations.RotateM(canonRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 towerRotationY = Transformations.RotateM(towerRotAY, Transformations.AXIS.AX_Y);
 
-        Matrix4x4 canonToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, Canon.transform.position, -1);
-        Matrix4x4 canonToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, Canon.transform.position, 1);
-
-        Matrix4x4 towerT = tankMove * towerRotationY * tankRotY;
-        Matrix4x4 canonT = tankMove * canonToTowerPivot2 * towerRotationY * canonToTowerPivot1 * canonToTowerPivot2 * tankRotY * canonToTowerPivot1 * canonRotationX;
-
-        MeshUtils.ApplyTransformations(Tower, towerT, originals[(int) TankParts.Tower]);
-        MeshUtils.ApplyTransformations(Canon, canonT, originals[(int) TankParts.Canon]);
-
-        // Apply transformations to wheels
         Matrix4x4 lWheelRotX = Transformations.RotateM(lWheelRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 rWheelRotX = Transformations.RotateM(rWheelRotAX, Transformations.AXIS.AX_X);
 
-        Matrix4x4 lBackWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, LBackWheel.transform.position, -1);
-        Matrix4x4 lBackWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, LBackWheel.transform.position, 1);
+        for (int i=0; i < tankPartsArr.Length; i++)
+        {
+            Matrix4x4 partToTowerPivot1 = GetTranslateMatrixWithPivot(
+                towerPos, 
+                tankPartsArr[i].transform.position, 
+                -1
+            );
+            Matrix4x4 partToTowerPivot2 = GetTranslateMatrixWithPivot(
+                towerPos, 
+                tankPartsArr[i].transform.position, 
+                1
+            );
 
-        Matrix4x4 lFrontWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, LFrontWheel.transform.position, -1);
-        Matrix4x4 lFrontWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, LFrontWheel.transform.position, 1);
+            Matrix4x4[] transformations = new Matrix4x4[] {
+                tankMove * partToTowerPivot2 * tankRotY * partToTowerPivot1,
+                tankMove * towerRotationY * tankRotY,
+                tankMove * partToTowerPivot2 * towerRotationY * partToTowerPivot1 * partToTowerPivot2 * tankRotY * partToTowerPivot1 * canonRotationX,
+                tankMove * partToTowerPivot2 * tankRotY * partToTowerPivot1 * rWheelRotX,
+                tankMove * partToTowerPivot2 * tankRotY * partToTowerPivot1 * lWheelRotX,
+                tankMove * partToTowerPivot2 * tankRotY * partToTowerPivot1 * rWheelRotX,
+                tankMove * partToTowerPivot2 * tankRotY * partToTowerPivot1 * lWheelRotX,
+            };
 
-        Matrix4x4 rBackWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, RBackWheel.transform.position, -1);
-        Matrix4x4 rBackWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, RBackWheel.transform.position, 1);
-
-        Matrix4x4 rFrontWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, RFrontWheel.transform.position, -1);
-        Matrix4x4 rFrontWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, RFrontWheel.transform.position, 1);
-
-        Matrix4x4 lBackWheelT = tankMove * lBackWheelToTowerPivot2 * tankRotY * lBackWheelToTowerPivot1 * lWheelRotX;
-        Matrix4x4 lFrontWheelT = tankMove * lFrontWheelToTowerPivot2 * tankRotY * lFrontWheelToTowerPivot1 * lWheelRotX;
-        
-        Matrix4x4 rBackWheelT = tankMove * rBackWheelToTowerPivot2 * tankRotY * rBackWheelToTowerPivot1 * rWheelRotX;
-        Matrix4x4 rFrontWheelT = tankMove * rFrontWheelToTowerPivot2 * tankRotY * rFrontWheelToTowerPivot1 * rWheelRotX;
-
-        MeshUtils.ApplyTransformations(LBackWheel, lBackWheelT, originals[(int) TankParts.LBackWheel]);
-        MeshUtils.ApplyTransformations(LFrontWheel, lFrontWheelT, originals[(int) TankParts.LFrontWheel]);
-
-        MeshUtils.ApplyTransformations(RBackWheel, rBackWheelT, originals[(int) TankParts.RBackWheel]);
-        MeshUtils.ApplyTransformations(RFrontWheel, rFrontWheelT, originals[(int) TankParts.RFrontWheel]);
+            MeshUtils.ApplyTransformations(tankPartsArr[i], transformations[i], originals[i]);
+        }
     }
 
     void RotateGOWithPivot(
         GameObject gameObjectToRotate,
         Vector3 pivot,
         float deltaGORotA,
-        Vector3 axis)
+        Vector3 axis,
+        bool useTankPosDelta
+    )
     {
         gameObjectToRotate.transform.RotateAround(
             new Vector3(
-                pivot.x + tankPosDelta.x,
+                pivot.x + (useTankPosDelta ? tankPosDelta.x : 0),
                 pivot.y,
-                pivot.z + tankPosDelta.z
+                pivot.z + (useTankPosDelta ? tankPosDelta.z : 0)
             ), 
             axis, 
             deltaGORotA
