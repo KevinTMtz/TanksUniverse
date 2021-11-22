@@ -13,17 +13,20 @@ public class PlayerController : MonoBehaviour
     public GameObject RBackWheel;
     public GameObject LBackWheel;
 
-    List<Vector3[]> originals;
+    public Camera playerCamera;
+    public GameObject shootPoint;
+    public GameObject canonPoint;
 
-    Vector3 tankPos;
+    private List<Vector3[]> originals;
 
-    float tankRotAY;
+    private Vector3 tankPosDelta;
+    private Vector3 towerPos;
 
-    float towerRotAY;
-    float canonRotAX;
-
-    float lWheelRotAX;
-    float rWheelRotAX;
+    private float tankRotAY;
+    private float towerRotAY;
+    private float canonRotAX;
+    private float lWheelRotAX;
+    private float rWheelRotAX;
 
     private PlayerShootController playerShootController;
 
@@ -31,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private PlayerCurrentWeapon playerCurrentWeapon;
     private PlayerTankInfoUI playerTankInfoUI;
 
-    public Camera playerCamera;
+    Vector3 directionRotCanonPoint;
 
     enum TankParts
     {
@@ -56,7 +59,8 @@ public class PlayerController : MonoBehaviour
         MeshUtils.ExtractVertices(RBackWheel, originals);
         MeshUtils.ExtractVertices(LBackWheel, originals);
 
-        tankPos = new Vector3(0, 0, 0);
+        tankPosDelta = new Vector3(0, 0, 0);
+        towerPos = Tower.transform.position;
 
         tankRotAY = 0;
         towerRotAY = 0;
@@ -71,10 +75,12 @@ public class PlayerController : MonoBehaviour
         playerTankInfoUI = GetComponent<PlayerTankInfoUI>();
 
         playerTankInfoUI.SetTankPositionText(new Vector3(
-            transform.position.x + tankPos.x,
+            transform.position.x + tankPosDelta.x,
             transform.position.y,
-            transform.position.z + tankPos.z
+            transform.position.z + tankPosDelta.z
         ));
+
+        directionRotCanonPoint = canonPoint.transform.position - Tower.transform.position;
     }
 
     void Update()
@@ -82,21 +88,73 @@ public class PlayerController : MonoBehaviour
         if (Time.timeScale != 0)
         {
             UpdateInputValues();
-            ApplyTransformations();
+            ApplyTankTransformations();
         }
     }
 
     void UpdateInputValues()
     {
-        // Rotate canon
-        if (Input.GetAxis("Vertical") != 0)
+        if (Input.GetKey("a") || Input.GetKey("d"))
         {
-            if (canonRotAX >= 30) canonRotAX = 30;
-            if (canonRotAX <= -35) canonRotAX = -35;
+            // Move tank forward
+            if (Input.GetKey("a") && Input.GetKey("d"))
+            {
+                lWheelRotAX += 0.75f;
+                rWheelRotAX += 0.75f;
 
-            canonRotAX -= Input.GetAxis("Vertical") * 0.5f;
+                float deltaMoveX = Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * 0.01f;
+                float deltaMoveZ = Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f;
 
-            playerTankInfoUI.SetCanonRotAXText(canonRotAX);
+                tankPosDelta = new Vector3(
+                    tankPosDelta.x + deltaMoveX, 
+                    0, 
+                    tankPosDelta.z + deltaMoveZ
+                );
+
+                playerTankInfoUI.SetTankPositionText(new Vector3(
+                    transform.position.x + tankPosDelta.x,
+                    transform.position.y,
+                    transform.position.z + tankPosDelta.z
+                ));
+
+                // Move player camera
+                playerCamera.transform.position = new Vector3(
+                    playerCamera.transform.position.x + deltaMoveX,
+                    playerCamera.transform.position.y,
+                    playerCamera.transform.position.z + deltaMoveZ
+                );
+
+                // Move shoot point
+                shootPoint.transform.position = new Vector3(
+                    shootPoint.transform.position.x + deltaMoveX,
+                    shootPoint.transform.position.y,
+                    shootPoint.transform.position.z + deltaMoveZ
+                );
+            }
+            // Rotate tank left
+            else if (Input.GetKey("a"))
+            {
+                lWheelRotAX -= 0.75f;
+                rWheelRotAX += 0.75f;
+
+                tankRotAY -= 0.5f;
+
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, -0.5f, Vector3.up);
+                RotateGOWithPivot(shootPoint, towerPos, -0.5f, Vector3.up);
+            }
+            // Rotate tank right
+            else if (Input.GetKey("d"))
+            {
+                lWheelRotAX += 0.75f;
+                rWheelRotAX -= 0.75f;
+
+                tankRotAY += 0.5f;
+
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, 0.5f, Vector3.up);
+                RotateGOWithPivot(shootPoint, towerPos, 0.5f, Vector3.up);
+            }
+
+            playerTankInfoUI.SetTankRotationText(tankRotAY);
         }
 
         // Rotate tower
@@ -108,57 +166,32 @@ public class PlayerController : MonoBehaviour
 
             playerTankInfoUI.SetTowerRotationText(towerRotAY);
 
-            RotateCameraWithPivot(deltaTowerRotAY);
+            RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTowerRotAY, Vector3.up);
+            RotateGOWithPivot(shootPoint, towerPos, deltaTowerRotAY, Vector3.up);
         }
 
-        if (Input.GetKey("a") || Input.GetKey("d"))
+        // Rotate canon base point around the pivot
+        Quaternion rotCanonPointAY = Quaternion.AngleAxis(towerRotAY + tankRotAY, Vector3.up);
+        canonPoint.transform.position = Tower.transform.position + rotCanonPointAY * directionRotCanonPoint;
+        canonPoint.transform.localRotation = rotCanonPointAY;
+        
+        // Rotate canon
+        float deltaCanonRotAX = -Input.GetAxis("Vertical") * 0.5f;
+        if (
+            Input.GetAxis("Vertical") != 0 && 
+            !(canonRotAX + deltaCanonRotAX > 31) && !(canonRotAX + deltaCanonRotAX < -36)
+        )
         {
-            // Move tank forward
-            if (Input.GetKey("a") && Input.GetKey("d"))
-            {
-                lWheelRotAX += 0.75f;
-                rWheelRotAX += 0.75f;
+            canonRotAX += deltaCanonRotAX;
 
-                float deltaMoveX = Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * 0.01f;
-                float deltaMoveY = Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f;
+            playerTankInfoUI.SetCanonRotAXText(canonRotAX);
 
-                tankPos = new Vector3(tankPos.x + deltaMoveX, 0, tankPos.z + deltaMoveY);
-
-                playerTankInfoUI.SetTankPositionText(new Vector3(
-                    transform.position.x + tankPos.x,
-                    transform.position.y,
-                    transform.position.z + tankPos.z
-                ));
-
-                // Move player camera
-                playerCamera.transform.position = new Vector3(
-                    playerCamera.transform.position.x + deltaMoveX,
-                    playerCamera.transform.position.y,
-                    playerCamera.transform.position.z + deltaMoveY
-                );
-            }
-            // Rotate tank left
-            else if (Input.GetKey("a"))
-            {
-                lWheelRotAX -= 0.75f;
-                rWheelRotAX += 0.75f;
-
-                tankRotAY -= 0.5f;
-
-                RotateCameraWithPivot(-0.5f);
-            }
-            // Rotate tank right
-            else if (Input.GetKey("d"))
-            {
-                lWheelRotAX += 0.75f;
-                rWheelRotAX -= 0.75f;
-
-                tankRotAY += 0.5f;
-
-                RotateCameraWithPivot(0.5f);
-            }
-
-            playerTankInfoUI.SetTankRotationText(tankRotAY);
+            RotateGOWithPivot(
+                shootPoint,
+                canonPoint.transform.position,
+                deltaCanonRotAX,
+                shootPoint.transform.right
+            );
         }
 
         // Change projectile force
@@ -189,18 +222,22 @@ public class PlayerController : MonoBehaviour
         // Shoot
         if (Input.GetKey("space"))
         {
-            playerShootController.ShootProjectile();
+            playerShootController.ShootProjectile(
+                shootPoint.transform.position,
+                shootPoint.transform.forward,
+                playerShotForce.Force
+            );
         }
     }
 
-    void ApplyTransformations()
+    void ApplyTankTransformations()
     {
         Matrix4x4 tankRotY = Transformations.RotateM(tankRotAY, Transformations.AXIS.AX_Y);
-        Matrix4x4 tankMove = Transformations.TranslateM(tankPos.x, 0, tankPos.z);
+        Matrix4x4 tankMove = Transformations.TranslateM(tankPosDelta.x, 0, tankPosDelta.z);
 
         // Apply transformation to body
-        Matrix4x4 bodyToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, Body.transform.position, -1);
-        Matrix4x4 bodyToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, Body.transform.position, 1);
+        Matrix4x4 bodyToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, Body.transform.position, -1);
+        Matrix4x4 bodyToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, Body.transform.position, 1);
 
         Matrix4x4 bodyT = tankMove * bodyToTowerPivot2 * tankRotY * bodyToTowerPivot1;
 
@@ -210,8 +247,8 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 canonRotationX = Transformations.RotateM(canonRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 towerRotationY = Transformations.RotateM(towerRotAY, Transformations.AXIS.AX_Y);
 
-        Matrix4x4 canonToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, Canon.transform.position, -1);
-        Matrix4x4 canonToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, Canon.transform.position, 1);
+        Matrix4x4 canonToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, Canon.transform.position, -1);
+        Matrix4x4 canonToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, Canon.transform.position, 1);
 
         Matrix4x4 towerT = tankMove * towerRotationY * tankRotY;
         Matrix4x4 canonT = tankMove * canonToTowerPivot2 * towerRotationY * canonToTowerPivot1 * canonToTowerPivot2 * tankRotY * canonToTowerPivot1 * canonRotationX;
@@ -223,17 +260,17 @@ public class PlayerController : MonoBehaviour
         Matrix4x4 lWheelRotX = Transformations.RotateM(lWheelRotAX, Transformations.AXIS.AX_X);
         Matrix4x4 rWheelRotX = Transformations.RotateM(rWheelRotAX, Transformations.AXIS.AX_X);
 
-        Matrix4x4 lBackWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, LBackWheel.transform.position, -1);
-        Matrix4x4 lBackWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, LBackWheel.transform.position, 1);
+        Matrix4x4 lBackWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, LBackWheel.transform.position, -1);
+        Matrix4x4 lBackWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, LBackWheel.transform.position, 1);
 
-        Matrix4x4 lFrontWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, LFrontWheel.transform.position, -1);
-        Matrix4x4 lFrontWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, LFrontWheel.transform.position, 1);
+        Matrix4x4 lFrontWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, LFrontWheel.transform.position, -1);
+        Matrix4x4 lFrontWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, LFrontWheel.transform.position, 1);
 
-        Matrix4x4 rBackWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, RBackWheel.transform.position, -1);
-        Matrix4x4 rBackWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, RBackWheel.transform.position, 1);
+        Matrix4x4 rBackWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, RBackWheel.transform.position, -1);
+        Matrix4x4 rBackWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, RBackWheel.transform.position, 1);
 
-        Matrix4x4 rFrontWheelToTowerPivot1 = getTranslateMatrixWithPivot(Tower.transform.position, RFrontWheel.transform.position, -1);
-        Matrix4x4 rFrontWheelToTowerPivot2 = getTranslateMatrixWithPivot(Tower.transform.position, RFrontWheel.transform.position, 1);
+        Matrix4x4 rFrontWheelToTowerPivot1 = GetTranslateMatrixWithPivot(towerPos, RFrontWheel.transform.position, -1);
+        Matrix4x4 rFrontWheelToTowerPivot2 = GetTranslateMatrixWithPivot(towerPos, RFrontWheel.transform.position, 1);
 
         Matrix4x4 lBackWheelT = tankMove * lBackWheelToTowerPivot2 * tankRotY * lBackWheelToTowerPivot1 * lWheelRotX;
         Matrix4x4 lFrontWheelT = tankMove * lFrontWheelToTowerPivot2 * tankRotY * lFrontWheelToTowerPivot1 * lWheelRotX;
@@ -248,16 +285,24 @@ public class PlayerController : MonoBehaviour
         MeshUtils.ApplyTransformations(RFrontWheel, rFrontWheelT, originals[(int) TankParts.RFrontWheel]);
     }
 
-    void RotateCameraWithPivot(float deltaCameraRotAY)
+    void RotateGOWithPivot(
+        GameObject gameObjectToRotate,
+        Vector3 pivot,
+        float deltaGORotA,
+        Vector3 axis)
     {
-        playerCamera.transform.RotateAround(new Vector3(
-            Tower.transform.position.x + tankPos.x,
-            0,
-            Tower.transform.position.z + tankPos.z
-        ), Vector3.up, deltaCameraRotAY);
+        gameObjectToRotate.transform.RotateAround(
+            new Vector3(
+                pivot.x + tankPosDelta.x,
+                pivot.y,
+                pivot.z + tankPosDelta.z
+            ), 
+            axis, 
+            deltaGORotA
+        );
     }
 
-    Matrix4x4 getTranslateMatrixWithPivot(Vector3 pivotPoint, Vector3 currentPos, int multiplier)
+    Matrix4x4 GetTranslateMatrixWithPivot(Vector3 pivotPoint, Vector3 currentPos, int multiplier)
     {
         return Transformations.TranslateM(
             (pivotPoint.x - currentPos.x) * multiplier, 
