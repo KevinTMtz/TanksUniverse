@@ -29,6 +29,13 @@ public class PlayerController : MonoBehaviour
     private float lWheelRotAX;
     private float rWheelRotAX;
 
+    private float deltaTankMoveMulti;
+    private float deltaWheelRotAY;
+    private float deltaTankRotAY;
+    private float deltaShotForce;
+    private float minCanonRotAngle;
+    private float maxCanonRotAngle;
+
     private PlayerShootController playerShootController;
 
     private PlayerShotForce playerShotForce;
@@ -53,13 +60,10 @@ public class PlayerController : MonoBehaviour
         // Extract Vertices
         originals = new List<Vector3[]>();
 
-        MeshUtils.ExtractVertices(Body, originals);
-        MeshUtils.ExtractVertices(Tower, originals);
-        MeshUtils.ExtractVertices(Canon, originals);
-        MeshUtils.ExtractVertices(RFrontWheel, originals);
-        MeshUtils.ExtractVertices(LFrontWheel, originals);
-        MeshUtils.ExtractVertices(RBackWheel, originals);
-        MeshUtils.ExtractVertices(LBackWheel, originals);
+        for (int i=0; i<tankPartsArr.Length; i++)
+        {
+            MeshUtils.ExtractVertices(tankPartsArr[i], originals);
+        }
 
         tankPosDelta = new Vector3(0, 0, 0);
         towerPos = Tower.transform.position;
@@ -83,6 +87,14 @@ public class PlayerController : MonoBehaviour
         ));
 
         ableToShoot = true;
+
+        // Constants
+        deltaTankMoveMulti = 0.04f;
+        deltaTankRotAY = 1;
+        deltaWheelRotAY = 3;
+        deltaShotForce = 0.25f;
+        minCanonRotAngle = 30;
+        maxCanonRotAngle = -45;
     }
 
     void Update()
@@ -101,11 +113,11 @@ public class PlayerController : MonoBehaviour
             // Move tank forward
             if (Input.GetKey("a") && Input.GetKey("d"))
             {
-                lWheelRotAX += 0.75f;
-                rWheelRotAX += 0.75f;
+                lWheelRotAX += deltaWheelRotAY;
+                rWheelRotAX += deltaWheelRotAY;
 
-                float deltaMoveX = Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * 0.01f;
-                float deltaMoveZ = Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * 0.01f;
+                float deltaMoveX = Mathf.Sin(Mathf.Deg2Rad * tankRotAY) * deltaTankMoveMulti;
+                float deltaMoveZ = Mathf.Cos(Mathf.Deg2Rad * tankRotAY) * deltaTankMoveMulti;
 
                 tankPosDelta = new Vector3(
                     tankPosDelta.x + deltaMoveX, 
@@ -136,26 +148,26 @@ public class PlayerController : MonoBehaviour
             // Rotate tank left
             else if (Input.GetKey("a"))
             {
-                lWheelRotAX -= 0.75f;
-                rWheelRotAX += 0.75f;
+                lWheelRotAX -= deltaWheelRotAY;
+                rWheelRotAX += deltaWheelRotAY;
 
-                tankRotAY -= 0.5f;
+                tankRotAY -= deltaTankRotAY;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, -0.5f, Vector3.up, true);
-                RotateGOWithPivot(shootPoint, towerPos, -0.5f, Vector3.up, true);
-                RotateGOWithPivot(canonPoint, Tower.transform.position, -0.5f, Vector3.up, false);
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, -deltaTankRotAY, Vector3.up, true);
+                RotateGOWithPivot(shootPoint, towerPos, -deltaTankRotAY, Vector3.up, true);
+                RotateGOWithPivot(canonPoint, Tower.transform.position, -deltaTankRotAY, Vector3.up, false);
             }
             // Rotate tank right
             else if (Input.GetKey("d"))
             {
-                lWheelRotAX += 0.75f;
-                rWheelRotAX -= 0.75f;
+                lWheelRotAX += deltaWheelRotAY;
+                rWheelRotAX -= deltaWheelRotAY;
 
-                tankRotAY += 0.5f;
+                tankRotAY += deltaTankRotAY;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, 0.5f, Vector3.up, true);
-                RotateGOWithPivot(shootPoint, towerPos, 0.5f, Vector3.up, true);
-                RotateGOWithPivot(canonPoint, Tower.transform.position, 0.5f, Vector3.up, false);
+                RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTankRotAY, Vector3.up, true);
+                RotateGOWithPivot(shootPoint, towerPos, deltaTankRotAY, Vector3.up, true);
+                RotateGOWithPivot(canonPoint, Tower.transform.position, deltaTankRotAY, Vector3.up, false);
             }
 
             playerTankInfoUI.SetTankRotationText(tankRotAY);
@@ -164,7 +176,7 @@ public class PlayerController : MonoBehaviour
         // Rotate tower
         if (Input.GetKey("q") || Input.GetKey("e"))
         {
-            float deltaTowerRotAY = (Input.GetKey("q") ? -1 : 1) * 0.5f;
+            float deltaTowerRotAY = (Input.GetKey("q") ? -1 : 1);
 
             towerRotAY += deltaTowerRotAY;
 
@@ -176,11 +188,13 @@ public class PlayerController : MonoBehaviour
         }
         
         // Rotate canon
-        float deltaCanonRotAX = -Input.GetAxis("Vertical") * 0.5f;
+        float deltaCanonRotAX = -Input.GetAxis("Vertical");
         if (Input.GetAxis("Vertical") != 0)
         {
-            if (canonRotAX + deltaCanonRotAX > 30) deltaCanonRotAX = 30 - canonRotAX;
-            else if (canonRotAX + deltaCanonRotAX < -45) deltaCanonRotAX = -45 - canonRotAX;
+            if (canonRotAX + deltaCanonRotAX > minCanonRotAngle) 
+                deltaCanonRotAX = minCanonRotAngle - canonRotAX;
+            else if (canonRotAX + deltaCanonRotAX < maxCanonRotAngle) 
+                deltaCanonRotAX = maxCanonRotAngle - canonRotAX;
 
             canonRotAX += deltaCanonRotAX;
 
@@ -199,9 +213,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey("f") || Input.GetKey("r"))
         {
             if(Input.GetKey("f"))
-                playerShotForce.DecreaseForce();
+                playerShotForce.DecreaseForce(deltaShotForce);
             else
-                playerShotForce.IncreaseForce();
+                playerShotForce.IncreaseForce(deltaShotForce);
         }
 
         // Chance weapon
