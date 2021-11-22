@@ -46,9 +46,10 @@ public class PlayerTankInfoUI : MonoBehaviour
     // Tower Rotation
     public Text towerRotationText;
 
-    public void SetTowerRotationText(float towerRotAY)
+    public void SetTowerRotationText(float towerRotAY, float tankRotAY)
     {
-        towerRotationText.text = $"Tower Rot-Y: {(int) ((towerRotAY > 0 ? 0 : 360) + towerRotAY % 360)}";
+        float totalAngle = towerRotAY + tankRotAY;
+        towerRotationText.text = $"Tower Rot-Y: {(int) ((totalAngle > 0 ? 0 : 360) + totalAngle % 360)}";
     }
 
     // Tank Position

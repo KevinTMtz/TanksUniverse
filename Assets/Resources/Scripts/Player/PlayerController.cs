@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour
             }
 
             playerTankInfoUI.SetTankRotationText(tankRotAY);
+            playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
         }
 
         // Rotate tower
@@ -180,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
             towerRotAY += deltaTowerRotAY;
 
-            playerTankInfoUI.SetTowerRotationText(towerRotAY);
+            playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
 
             RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTowerRotAY, Vector3.up, true);
             RotateGOWithPivot(shootPoint, towerPos, deltaTowerRotAY, Vector3.up, true);
