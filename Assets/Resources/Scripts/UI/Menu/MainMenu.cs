@@ -14,4 +14,14 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void SetGeneralInfoNumPlayers(int num)
+    {
+        GeneralInfo.numOfPlayers = num;
+    }
+
+    public void SetGeneralInfoNumIAs(int num)
+    {
+        GeneralInfo.numOfIAs = num;
+    }
 }
