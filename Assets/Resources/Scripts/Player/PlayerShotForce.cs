@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class PlayerShotForce : MonoBehaviour
 {
     private float force;
-
-    private float forceDelta;
     
     private PlayerTankInfoUI playerTankInfoUI;
     public Text shotForceText;
@@ -16,21 +14,20 @@ public class PlayerShotForce : MonoBehaviour
     void Start()
     {
         force = 50;
-        forceDelta = 0.1f;
 
         playerTankInfoUI = gameObject.GetComponent<PlayerTankInfoUI>();
         
         UpdateUI();
     }
 
-    public void IncreaseForce()
+    public void IncreaseForce(float forceDelta)
     {
         force = Math.Min(100, force + forceDelta);
 
         UpdateUI();
     }
 
-    public void DecreaseForce()
+    public void DecreaseForce(float forceDelta)
     {
         force = Math.Max(0, force - forceDelta);
         
