@@ -26,6 +26,7 @@ public class ProjectileController : MonoBehaviour
 
     void Start()
     {
+        
         gravityAcc = 9.81f;
         gravityForce = -mass * gravityAcc;
 
@@ -110,13 +111,13 @@ public class ProjectileController : MonoBehaviour
         forces = new Vector3(0, 0, 0);
     }
 
-    public bool CheckCollision(ProjectileController other)
+    public bool CheckCollision(PlayerController tank)
     {
-        float sumR = r + other.r;
+        float sumR = r + tank.colliderRadius;
 
-        float dx = currentPos.x - other.currentPos.x;
-        float dy = currentPos.y - other.currentPos.y;
-        float dz = currentPos.z - other.currentPos.z;
+        float dx = currentPos.x - (tank.gameObject.transform.position.x + tank.TankPosDelta.x);
+        float dy = currentPos.y - (tank.gameObject.transform.position.y + tank.TankPosDelta.y);
+        float dz = currentPos.z - (tank.gameObject.transform.position.z + tank.TankPosDelta.z);
 
         float distance2 = dx * dx + dy * dy + dz * dz;
 
