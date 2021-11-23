@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cd0380c3f3c49449c51c61d8fccc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  mass: 5
+  damage: 15
+  mass: 5.2
   r: 0.2
   currentPos: {x: 0, y: 0, z: 0}
   prevPos: {x: 0, y: 0, z: 0}

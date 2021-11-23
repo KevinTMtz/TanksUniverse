@@ -40,7 +40,14 @@ public class ProjectileController : MonoBehaviour
         bounces = 0;
     }
 
-    void Update()
+    void Update() 
+    {
+        if (Time.timeScale != 0)
+        {
+            UpdatePhysics();
+        }
+    }
+    void UpdatePhysics()
     {
         dt = Time.deltaTime;
 
@@ -59,7 +66,7 @@ public class ProjectileController : MonoBehaviour
             forces.y = gravityForce + Mathf.Max(shootForce.y, 0);
 
             // Atmoshperic Air Resistance
-            Vector3 v = (currentPos - prevPos) / dt;
+            Vector3 v = (currentPos - prevPos) / (dt == 0 ? 1 : dt);
 
             // Going up
             if (currentPos.y > prevPos.y)

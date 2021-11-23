@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 15
-  mass: 5
+  mass: 5.1
   r: 0.15
   currentPos: {x: 0, y: 0, z: 0}
   prevPos: {x: 0, y: 0, z: 0}
