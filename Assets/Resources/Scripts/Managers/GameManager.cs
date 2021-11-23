@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     public string message;
     
+    private GameObject lastCamera;
+
     void Start()
     {
         spawnPoints = new List<GameObject>();
@@ -54,7 +56,11 @@ public class GameManager : MonoBehaviour
         // Activate current player in turn
         if (currentPlayerGO == null)
         {
-            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(true);
+            if (lastCamera) lastCamera.SetActive(false);
+
+            lastCamera = playerTanks[currentPlayer].transform.Find("Back Camera").gameObject;
+
+            lastCamera.SetActive(true);
             playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject.SetActive(true);
 
             currentPlayerGO = playerTanks[currentPlayer].transform.Find("PlayerTank").gameObject;
@@ -88,7 +94,6 @@ public class GameManager : MonoBehaviour
 
             currentPlayerController.enabled = false;
             playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject.SetActive(false);
-            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(false);
 
             currentPlayerGO = null;
             currentPlayerController = null;
