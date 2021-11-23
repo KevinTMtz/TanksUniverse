@@ -17,7 +17,7 @@ public class WindController
 
     public static void SetRandomWind()
     {
-        force = Random.Range(0, 10f);
+        force = Random.Range(0, 5f);
         angle = Random.Range(0, 360);
 
         float windX = Mathf.Sin(Mathf.Deg2Rad * angle) * force;

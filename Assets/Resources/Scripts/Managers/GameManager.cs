@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
             waitingForBullet = true;
 
             message = "Miss!";
+
+            WindController.SetRandomWind();
         }
 
         // Wait to be able to shoot

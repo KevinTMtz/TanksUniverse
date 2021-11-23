@@ -134,8 +134,6 @@ public class PlayerController : MonoBehaviour
                     tankPosDelta.z + deltaMoveZ
                 );
 
-                UpdateUI();
-
                 // Move player camera
                 playerCamera.transform.position = new Vector3(
                     playerCamera.transform.position.x + deltaMoveX,
@@ -170,8 +168,6 @@ public class PlayerController : MonoBehaviour
 
                 ApplyRotationToGO(deltaTankRotAY);
             }
-
-            UpdateUI();
         }
 
         // Rotate tower
@@ -180,8 +176,6 @@ public class PlayerController : MonoBehaviour
             float deltaTowerRotAY = (Input.GetKey("q") ? -1 : 1);
 
             towerRotAY += deltaTowerRotAY;
-
-            UpdateUI();
 
             ApplyRotationToGO(deltaTowerRotAY);
         }
@@ -196,8 +190,6 @@ public class PlayerController : MonoBehaviour
                 deltaCanonRotAX = maxCanonRotAngle - canonRotAX;
 
             canonRotAX += deltaCanonRotAX;
-
-            UpdateUI();
 
             RotateGOWithPivot(
                 shootPoint,
@@ -244,6 +236,8 @@ public class PlayerController : MonoBehaviour
                 playerCurrentWeapon.CurrentWeapon
             );
         }
+
+        UpdateUI();
     }
 
     void UpdateUI()
@@ -258,6 +252,8 @@ public class PlayerController : MonoBehaviour
                 transform.position.z + tankPosDelta.z
             )
         );
+        playerTankInfoUI.SetWindRotationText(WindController.Angle);
+        playerTankInfoUI.SetWindForceText(WindController.Force);
     }
 
     void ApplyTankTransformations()
