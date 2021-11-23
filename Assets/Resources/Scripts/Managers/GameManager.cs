@@ -13,6 +13,21 @@ public class GameManager : MonoBehaviour
     
     private GameObject[] playerTanks;
     private GameObject[] computerTanks;
+
+    private int currentPlayer;
+    private GameObject currentPlayerGO;
+    private PlayerController currentPlayerController;
+
+    private bool hasToSetStartState;
+
+    private float timeAbleToShoot;
+    private bool waitingToShoot;
+    private bool waitingForBullet;
+
+    public bool WaitingForBullet
+    {
+        set { waitingForBullet = value; }
+    }
     
     void Start()
     {
@@ -29,6 +44,63 @@ public class GameManager : MonoBehaviour
         InstantiateTanks(computerTanks, true);
 
         Shuffle(playerTanks);
+
+        hasToSetStartState = true;
+        currentPlayer = 0;
+        currentPlayerGO = null;
+        currentPlayerController = null;
+    }
+
+    void Update()
+    {
+        if (Time.frameCount > 1 && hasToSetStartState)
+        {
+            for (int i=0; i<playerTanks.Length; i++)
+            {
+                playerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
+            }
+
+            for (int i=0; i<computerTanks.Length; i++)
+            {
+                computerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
+            }
+
+            hasToSetStartState = false;
+        }
+
+        if (!hasToSetStartState && currentPlayerGO == null)
+        {
+            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(true);
+
+            currentPlayerGO = playerTanks[currentPlayer].transform.Find("PlayerTank").gameObject;
+            currentPlayerController = currentPlayerGO.GetComponent<PlayerController>();
+            currentPlayerController.enabled = true;
+
+            timeAbleToShoot = Time.time + 3;
+            waitingToShoot = true;
+            waitingForBullet = true;
+        }
+
+        if (Time.time > timeAbleToShoot && waitingToShoot)
+        {
+            currentPlayerController.ableToShoot = true;
+            waitingToShoot = false;
+        }
+
+        if (
+            currentPlayerGO != null && 
+            !currentPlayerController.ableToShoot &&
+            !waitingToShoot &&
+            !waitingForBullet)
+        {
+            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(false);
+            currentPlayerController.enabled = false;
+
+            currentPlayerGO = null;
+            currentPlayerController = null;
+
+            currentPlayer = (currentPlayer + 1) % playerTanks.Length;
+        }
     }
 
     void InstantiateTanks(GameObject[] tanksList, bool isEnemy)
@@ -51,8 +123,12 @@ public class GameManager : MonoBehaviour
 
             tanksList[i].name = isEnemy ? $"Enemy {i+1}" : $"PlayerKit {i+1}";
 
+            tanksList[i].transform.Find("Back Camera").gameObject.SetActive(false);
+
             GameObject playerTank = tanksList[i].transform.Find("PlayerTank").gameObject;
-            playerTank.GetComponent<PlayerController>().TankRotAY = Random.Range(0, 359);
+
+            PlayerController playerController = playerTank.GetComponent<PlayerController>();
+            playerController.TankRotAY = Random.Range(0, 359);
 
             string[] partStrArr = new string[]{"Body", "Tower", "Canon"};
             for (int j=0; j<partStrArr.Length; j++)
@@ -65,11 +141,11 @@ public class GameManager : MonoBehaviour
 
     void Shuffle(GameObject[] array)
     {
-        for (int i = array.Length-1; i > 0; i--)
+        for (int i = 0; i < array.Length; i++)
         {
-            int r = Random.Range(0, i-1);
-            GameObject temp = array[r];
-            array[r] = array[i];
+            int random = Random.Range(0, array.Length);
+            GameObject temp = array[random];
+            array[random] = array[i];
             array[i] = temp;
         }
     }
