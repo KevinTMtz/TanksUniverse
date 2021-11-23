@@ -45,6 +45,11 @@ public class PlayerController : MonoBehaviour
 
     private bool ableToShoot;
 
+    public float TankRotAY
+    {
+        set { tankRotAY = value; }
+    }
+
     void Start()
     {
         tankPartsArr = new GameObject[] { 
@@ -73,6 +78,8 @@ public class PlayerController : MonoBehaviour
         canonRotAX = 0;
         lWheelRotAX = 0;
         rWheelRotAX = 0;
+
+        ApplyRotationToGO(tankRotAY);
 
         playerShootController = GetComponent<PlayerShootController>();
 
@@ -153,9 +160,7 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY -= deltaTankRotAY;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, -deltaTankRotAY, Vector3.up, true);
-                RotateGOWithPivot(shootPoint, towerPos, -deltaTankRotAY, Vector3.up, true);
-                RotateGOWithPivot(canonPoint, Tower.transform.position, -deltaTankRotAY, Vector3.up, false);
+                ApplyRotationToGO(-deltaTankRotAY);
             }
             // Rotate tank right
             else if (Input.GetKey("d"))
@@ -165,9 +170,7 @@ public class PlayerController : MonoBehaviour
 
                 tankRotAY += deltaTankRotAY;
 
-                RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTankRotAY, Vector3.up, true);
-                RotateGOWithPivot(shootPoint, towerPos, deltaTankRotAY, Vector3.up, true);
-                RotateGOWithPivot(canonPoint, Tower.transform.position, deltaTankRotAY, Vector3.up, false);
+                ApplyRotationToGO(deltaTankRotAY);
             }
 
             playerTankInfoUI.SetTankRotationText(tankRotAY);
@@ -183,9 +186,7 @@ public class PlayerController : MonoBehaviour
 
             playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
 
-            RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaTowerRotAY, Vector3.up, true);
-            RotateGOWithPivot(shootPoint, towerPos, deltaTowerRotAY, Vector3.up, true);
-            RotateGOWithPivot(canonPoint, Tower.transform.position, deltaTowerRotAY, Vector3.up, false);
+            ApplyRotationToGO(deltaTowerRotAY);
         }
         
         // Rotate canon
@@ -284,6 +285,13 @@ public class PlayerController : MonoBehaviour
 
             MeshUtils.ApplyTransformations(tankPartsArr[i], transformations[i], originals[i]);
         }
+    }
+
+    void ApplyRotationToGO(float deltaRotAY)
+    {
+        RotateGOWithPivot(playerCamera.gameObject, towerPos, deltaRotAY, Vector3.up, true);
+        RotateGOWithPivot(shootPoint, towerPos, deltaRotAY, Vector3.up, true);
+        RotateGOWithPivot(canonPoint, Tower.transform.position, deltaRotAY, Vector3.up, false);
     }
 
     void RotateGOWithPivot(
