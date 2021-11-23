@@ -536,7 +536,7 @@ PrefabInstance:
     - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: projectiles.Array.data[4]
       value: 
-      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
+      objectReference: {fileID: 5689154669313651021, guid: f3658f3da59ff374bb5f1c842e33bc02, type: 3}
     - target: {fileID: 2281799929179570499, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: currentGunText
       value: 
