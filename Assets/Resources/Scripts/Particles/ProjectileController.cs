@@ -26,7 +26,7 @@ public class ProjectileController : MonoBehaviour
 
     void Start()
     {
-        
+        GameObject.Find("GameManager").GetComponent<GameManager>().projectileController = this;
         gravityAcc = 9.81f;
         gravityForce = -mass * gravityAcc;
 

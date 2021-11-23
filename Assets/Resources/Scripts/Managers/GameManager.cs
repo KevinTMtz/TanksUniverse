@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     
     private List<GameObject> playerTanks;
     private List<GameObject> computerTanks;
+
+    public ProjectileController projectileController;
     
     void Start()
     {
@@ -27,11 +29,25 @@ public class GameManager : MonoBehaviour
 
         computerTanks = new List<GameObject>();
         InstantiateTanks(computerTanks, GeneralInfo.numOfIAs, true);
+
+        projectileController = null;
     }
 
     void Update()
     {
-        
+        if(projectileController)
+        {
+            foreach (var tank in playerTanks)
+            {
+                GameObject playerTank = tank.transform.Find("PlayerTank").gameObject;
+                if ( projectileController.CheckCollision(playerTank.GetComponent<PlayerController>()) )
+                {
+                    playerTank.GetComponent<PlayerHealth>().DecreaseHealth(projectileController.damage);
+                    projectileController = null;
+                    break;
+                }
+            }
+        }
     }
 
     void InstantiateTanks(List<GameObject> tanksList, int numOfTanks, bool isEnemy)
