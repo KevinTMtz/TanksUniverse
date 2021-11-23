@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
 
     private List<GameObject> spawnPoints;
     
-    private List<GameObject> playerTanks;
-    private List<GameObject> computerTanks;
+    private GameObject[] playerTanks;
+    private GameObject[] computerTanks;
     
     void Start()
     {
@@ -22,39 +22,34 @@ public class GameManager : MonoBehaviour
             spawnPoints.Add(spawnPointsGO.transform.GetChild(i).gameObject);
         }
 
-        playerTanks = new List<GameObject>();
-        InstantiateTanks(playerTanks, GeneralInfo.numOfPlayers, false);
+        playerTanks = new GameObject[GeneralInfo.numOfPlayers];
+        InstantiateTanks(playerTanks, false);
 
-        computerTanks = new List<GameObject>();
-        InstantiateTanks(computerTanks, GeneralInfo.numOfIAs, true);
+        computerTanks = new GameObject[GeneralInfo.numOfIAs];
+        InstantiateTanks(computerTanks, true);
+
+        Shuffle(playerTanks);
     }
 
-    void Update()
+    void InstantiateTanks(GameObject[] tanksList, bool isEnemy)
     {
-        
-    }
-
-    void InstantiateTanks(List<GameObject> tanksList, int numOfTanks, bool isEnemy)
-    {
-        for (int i=0; i<numOfTanks; i++)
+        for (int i=0; i<tanksList.Length; i++)
         {
             int randomIndex = Random.Range(0, spawnPoints.Count - 1);
             Vector3 spawnPointsPos = spawnPoints[randomIndex].transform.position;
             spawnPoints.RemoveAt(randomIndex);
 
-            tanksList.Add(
-                Instantiate(
-                    playerTankPrefab, 
-                    new Vector3(
-                        spawnPointsPos.x, 
-                        -2.247196f, 
-                        spawnPointsPos.z
-                    ), 
-                    transform.rotation
-                )
+            tanksList[i] = Instantiate(
+                playerTankPrefab, 
+                new Vector3(
+                    spawnPointsPos.x, 
+                    -2.247196f, 
+                    spawnPointsPos.z
+                ), 
+                transform.rotation
             );
 
-            tanksList[i].name = isEnemy ? $"PlayerKit {i+1}" : $"PlayerKit {i+1}";
+            tanksList[i].name = isEnemy ? $"Enemy {i+1}" : $"PlayerKit {i+1}";
 
             GameObject playerTank = tanksList[i].transform.Find("PlayerTank").gameObject;
             playerTank.GetComponent<PlayerController>().TankRotAY = Random.Range(0, 359);
@@ -65,6 +60,17 @@ public class GameManager : MonoBehaviour
                 MeshRenderer meshRenderer = playerTank.transform.Find(partStrArr[j]).GetComponent<MeshRenderer>();
                 meshRenderer.materials = new Material[] {materials[isEnemy ? 4 : i]};
             }
+        }
+    }
+
+    void Shuffle(GameObject[] array)
+    {
+        for (int i = array.Length-1; i > 0; i--)
+        {
+            int r = Random.Range(0, i-1);
+            GameObject temp = array[r];
+            array[r] = array[i];
+            array[i] = temp;
         }
     }
 }
