@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerTankInfoUI playerTankInfoUI;
 
-    private bool ableToShoot;
+    public bool ableToShoot;
 
     public float TankRotAY
     {
@@ -73,7 +73,6 @@ public class PlayerController : MonoBehaviour
         tankPosDelta = new Vector3(0, 0, 0);
         towerPos = Tower.transform.position;
 
-        tankRotAY = 0;
         towerRotAY = 0;
         canonRotAX = 0;
         lWheelRotAX = 0;
@@ -93,7 +92,7 @@ public class PlayerController : MonoBehaviour
             transform.position.z + tankPosDelta.z
         ));
 
-        ableToShoot = true;
+        ableToShoot = false;
 
         // Constants
         deltaTankMoveMulti = 0.04f;
