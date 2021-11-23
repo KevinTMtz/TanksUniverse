@@ -73,7 +73,6 @@ public class PlayerController : MonoBehaviour
         tankPosDelta = new Vector3(0, 0, 0);
         towerPos = Tower.transform.position;
 
-        tankRotAY = 0;
         towerRotAY = 0;
         canonRotAX = 0;
         lWheelRotAX = 0;
