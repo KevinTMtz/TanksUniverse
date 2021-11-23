@@ -53,11 +53,11 @@ public class GameManager : MonoBehaviour
                     transform.rotation
                 )
             );
-            tanksList[i].transform.Rotate(0, Random.Range(0, 359), 0);
 
             tanksList[i].name = isEnemy ? $"PlayerKit {i+1}" : $"PlayerKit {i+1}";
 
             GameObject playerTank = tanksList[i].transform.Find("PlayerTank").gameObject;
+            playerTank.GetComponent<PlayerController>().TankRotAY = Random.Range(0, 359);
 
             string[] partStrArr = new string[]{"Body", "Tower", "Canon"};
             for (int j=0; j<partStrArr.Length; j++)
