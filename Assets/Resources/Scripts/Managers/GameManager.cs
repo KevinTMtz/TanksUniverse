@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> playerTanks;
     private List<GameObject> computerTanks;
 
+    public ProjectileController projectileController;
     private int currentPlayer;
     private GameObject currentPlayerGO;
     private PlayerController currentPlayerController;
@@ -23,9 +24,9 @@ public class GameManager : MonoBehaviour
     private float timeAbleToShoot;
     private bool waitingToShoot;
 
-    private bool waitingForBullet;
+    public bool waitingForBullet;
 
-    private string message;
+    public string message;
     
     void Start()
     {
@@ -41,6 +42,8 @@ public class GameManager : MonoBehaviour
         computerTanks = new List<GameObject>();
         InstantiateTanks(computerTanks, GeneralInfo.numOfIAs, true);
 
+        projectileController = null;
+        
         Shuffle(playerTanks);
 
         hasToSetStartState = true;
@@ -79,6 +82,8 @@ public class GameManager : MonoBehaviour
             timeAbleToShoot = Time.time + 3;
             waitingToShoot = true;
             waitingForBullet = true;
+
+            message = "Miss!";
         }
 
         // Wait to be able to shoot
@@ -104,6 +109,22 @@ public class GameManager : MonoBehaviour
             currentPlayerController = null;
 
             currentPlayer = (currentPlayer + 1) % playerTanks.Count;
+        }
+
+        if (projectileController)
+        {
+            foreach (var tank in playerTanks)
+            {
+                GameObject playerTank = tank.transform.Find("PlayerTank").gameObject;
+                if (projectileController.CheckCollision(playerTank.GetComponent<PlayerController>()))
+                {
+                    playerTank.GetComponent<PlayerHealth>().DecreaseHealth(projectileController.damage);
+                    Destroy(projectileController.gameObject);
+                    message = "Hit!";
+                    projectileController = null;
+                    break;
+                }
+            }
         }
     }
 

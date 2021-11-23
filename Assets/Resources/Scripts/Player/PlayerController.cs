@@ -45,9 +45,16 @@ public class PlayerController : MonoBehaviour
 
     public bool ableToShoot;
 
+    public float colliderRadius;
+
     public float TankRotAY
     {
         set { tankRotAY = value; }
+    }
+
+    public Vector3 TankPosDelta
+    {
+        get { return tankPosDelta; }
     }
 
     void Start()
@@ -320,4 +327,5 @@ public class PlayerController : MonoBehaviour
             (pivotPoint.z - currentPos.z) * multiplier
         );
     }
+
 }
