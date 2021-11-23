@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class PlayerShootController : MonoBehaviour
 {
-    public void ShootProjectile(Vector3 posCannon, Vector3 shootPointDirection, float shotForce)
+    public GameObject[] projectiles;
+    public void ShootProjectile(Transform shootPointTransform, float shotForce, int projectileType)
     {
-        GameObject newProjectile = new GameObject();
-        newProjectile.name = "Projectile";
 
-        ProjectileController projectileController = newProjectile.AddComponent<ProjectileController>();
+        GameObject newProjectile = GameObject.Instantiate(
+            projectiles[projectileType-1],
+            shootPointTransform.position,
+            shootPointTransform.rotation
+        );
+
+        ProjectileController projectileController = newProjectile.GetComponent<ProjectileController>();
         
-        projectileController.currentPos = posCannon;
+        projectileController.currentPos = shootPointTransform.position;
         projectileController.prevPos = projectileController.currentPos;
 
-        projectileController.r = 0.15f;
-        projectileController.mass = 5;
-        projectileController.restitution = 0.2f;
-
-        Vector3 forceVector = shootPointDirection.normalized * (50 + 35 * (shotForce / 100));
+        Vector3 forceVector = shootPointTransform.forward.normalized * (50 + 35 * (shotForce / 100));
         projectileController.shootForce = forceVector;
 
         Destroy(newProjectile, 10);
