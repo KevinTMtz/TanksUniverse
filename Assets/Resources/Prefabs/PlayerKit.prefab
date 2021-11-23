@@ -591,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 2669679493335910550}
     - target: {fileID: 9196289032596142400, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: colliderRadius
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9196289032596142400, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: playerCurrentWeapon

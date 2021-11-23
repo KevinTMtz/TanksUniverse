@@ -25,6 +25,7 @@ public class PlayerHealth : MonoBehaviour
         if (health == 0 && !isKill)
         {
             isKill = true;
+            Destroy(gameObject.transform.parent.gameObject);
         }
     }
 

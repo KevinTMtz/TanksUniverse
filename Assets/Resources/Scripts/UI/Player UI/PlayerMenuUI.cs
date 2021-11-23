@@ -10,6 +10,8 @@ public class PlayerMenuUI : MonoBehaviour
 
     private Scene activeScene;
     private PlayerHealth playerHealth;
+
+    private GameManager gameManager;
     
     void Start() 
     {
@@ -17,14 +19,16 @@ public class PlayerMenuUI : MonoBehaviour
         activeScene = SceneManager.GetActiveScene();
 
         playerHealth = FindObjectOfType<PlayerHealth>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     
     void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !playerHealth.IsKill)
+        if (Input.GetKeyDown(KeyCode.Escape))
             ShowPauseMenu();
 
-        if (playerHealth.IsKill && Time.timeScale != 0)
+        if (gameManager.PlayersLeft == 1 && Time.timeScale != 0)
         {
             Time.timeScale = 0;
             pauseMenuBackground.SetActive(true);

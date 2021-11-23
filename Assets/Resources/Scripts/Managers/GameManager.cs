@@ -32,8 +32,15 @@ public class GameManager : MonoBehaviour
 
     private float timeToNextTurn;
 
+    public int PlayersLeft
+    {
+        get { return playerTanks.Count; }
+    }
+
     void Start()
     {
+        Time.timeScale = 1;
+
         spawnPoints = new List<GameObject>();
         for (int i=0; i<spawnPointsGO.transform.childCount; i++)
         {
@@ -112,6 +119,12 @@ public class GameManager : MonoBehaviour
 
             currentPlayer = (currentPlayer + 1) % playerTanks.Count;
 
+            if (playerTanks[currentPlayer] == null)
+            {
+                playerTanks.RemoveAt(currentPlayer);
+                currentPlayer = currentPlayer % playerTanks.Count;
+            }
+
             timeToNextTurn = Time.time + 2;
         }
 
@@ -119,6 +132,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (var tank in playerTanks)
             {
+                if (tank == null) break;
                 GameObject playerTank = tank.transform.Find("PlayerTank").gameObject;
                 if (projectileController.CheckCollision(playerTank.GetComponent<PlayerController>()))
                 {
