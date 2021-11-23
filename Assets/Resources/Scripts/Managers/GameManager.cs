@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class GameManager : MonoBehaviour
     public string message;
     
     private GameObject lastCamera;
+    private GameObject lastUI;
+
+    private float timeToNextTurn;
 
     void Start()
     {
@@ -54,14 +58,21 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Activate current player in turn
-        if (currentPlayerGO == null)
+        if (currentPlayerGO == null && Time.time > timeToNextTurn)
         {
             if (lastCamera) lastCamera.SetActive(false);
+            if (lastUI) 
+            {   
+                GameObject uiMessage = lastUI.transform.Find("HitOrMiss").gameObject;
+                uiMessage.SetActive(false);
+                lastUI.SetActive(false);
+            }
 
             lastCamera = playerTanks[currentPlayer].transform.Find("Back Camera").gameObject;
-
             lastCamera.SetActive(true);
-            playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject.SetActive(true);
+
+            lastUI = playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject;
+            lastUI.SetActive(true);
 
             currentPlayerGO = playerTanks[currentPlayer].transform.Find("PlayerTank").gameObject;
             currentPlayerController = currentPlayerGO.GetComponent<PlayerController>();
@@ -90,15 +101,18 @@ public class GameManager : MonoBehaviour
             !currentPlayerController.ableToShoot &&
             !waitingForBullet)
         {
-            Debug.Log(message);
+            GameObject uiMessage = playerTanks[currentPlayer].transform.Find("PlayerUI").Find("HitOrMiss").gameObject;
+            uiMessage.SetActive(true);
+            uiMessage.GetComponent<Text>().text = message;
 
             currentPlayerController.enabled = false;
-            playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject.SetActive(false);
 
             currentPlayerGO = null;
             currentPlayerController = null;
 
             currentPlayer = (currentPlayer + 1) % playerTanks.Count;
+
+            timeToNextTurn = Time.time + 2;
         }
 
         if (projectileController)
