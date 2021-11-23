@@ -16,12 +16,11 @@ public class ProjectileController : MonoBehaviour
 
     float dt;
 
-    public GameObject sphere;
-
     private float gravityAcc;
     private float gravityForce;
     public Vector3 shootForce;
 
+    public int maxBounces;
     private int bounces;
 
     void Start()
@@ -33,14 +32,9 @@ public class ProjectileController : MonoBehaviour
         forces.y = gravityForce + shootForce.y;
         forces.z = shootForce.z + WindController.Wind.z;
 
-        sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.SetParent(transform);
+        gameObject.transform.SetParent(transform);
 
-        sphere.transform.position = currentPos;
-        sphere.transform.localScale = new Vector3(r*2, r*2, r*2);
-
-        Renderer rend = sphere.GetComponent<Renderer>();
-        rend.material.SetColor("_Color", Color.black);
+        gameObject.transform.position = currentPos;
 
         bounces = 0;
     }
@@ -52,7 +46,7 @@ public class ProjectileController : MonoBehaviour
         if (
             Mathf.Abs(currentPos.y - prevPos.y) < 0.001f && 
             Mathf.Abs(currentPos.y - r) < 0.001f ||
-            bounces > 1
+            bounces > maxBounces
         )
         {
             StopBall();
@@ -84,7 +78,7 @@ public class ProjectileController : MonoBehaviour
             currentPos = 2 * currentPos - prevPos + accel * dt * dt;
 
             prevPos = tempcurrentPos;
-            sphere.transform.position = currentPos;
+            gameObject.transform.position = currentPos;
 
             CollisionFloor();
         }

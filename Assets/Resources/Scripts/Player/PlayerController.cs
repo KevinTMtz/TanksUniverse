@@ -241,9 +241,9 @@ public class PlayerController : MonoBehaviour
             ableToShoot = false;
 
             playerShootController.ShootProjectile(
-                shootPoint.transform.position,
-                shootPoint.transform.forward,
-                playerShotForce.Force
+                shootPoint.transform,
+                playerShotForce.Force,
+                playerCurrentWeapon.CurrentWeapon
             );
         }
     }

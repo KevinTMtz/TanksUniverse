@@ -513,6 +513,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3461837703053750452}
     m_Modifications:
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.data[0]
+      value: 
+      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.data[1]
+      value: 
+      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.data[2]
+      value: 
+      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.data[3]
+      value: 
+      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
+    - target: {fileID: 838194039534598334, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
+      propertyPath: projectiles.Array.data[4]
+      value: 
+      objectReference: {fileID: 8631452387104893778, guid: 7f926a558a6dfeb43bf93aa41d23b6d3, type: 3}
     - target: {fileID: 2281799929179570499, guid: 32350f9afb07e471c877ac0220ee0f7a, type: 3}
       propertyPath: currentGunText
       value: 
