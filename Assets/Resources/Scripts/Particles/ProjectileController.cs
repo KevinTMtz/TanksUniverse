@@ -23,10 +23,12 @@ public class ProjectileController : MonoBehaviour
 
     public int maxBounces;
     private int bounces;
+    private GameManager gameManager;
 
     void Start()
     {
-        GameObject.Find("GameManager").GetComponent<GameManager>().projectileController = this;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager.projectileController = this;
         gravityAcc = 9.81f;
         gravityForce = -mass * gravityAcc;
 
@@ -37,6 +39,11 @@ public class ProjectileController : MonoBehaviour
         transform.position = currentPos;
 
         bounces = 0;
+    }
+
+    void OnDestroy() 
+    {
+        gameManager.waitingForBullet = false;
     }
 
     void Update() 
