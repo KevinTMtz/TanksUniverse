@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
 
     private List<GameObject> spawnPoints;
     
-    private GameObject[] playerTanks;
-    private GameObject[] computerTanks;
+    private List<GameObject> playerTanks;
+    private List<GameObject> computerTanks;
 
     private int currentPlayer;
     private GameObject currentPlayerGO;
@@ -22,12 +22,10 @@ public class GameManager : MonoBehaviour
 
     private float timeAbleToShoot;
     private bool waitingToShoot;
+
     private bool waitingForBullet;
 
-    public bool WaitingForBullet
-    {
-        set { waitingForBullet = value; }
-    }
+    private string message;
     
     void Start()
     {
@@ -37,11 +35,11 @@ public class GameManager : MonoBehaviour
             spawnPoints.Add(spawnPointsGO.transform.GetChild(i).gameObject);
         }
 
-        playerTanks = new GameObject[GeneralInfo.numOfPlayers];
-        InstantiateTanks(playerTanks, false);
+        playerTanks = new List<GameObject>();
+        InstantiateTanks(playerTanks, GeneralInfo.numOfPlayers, false);
 
-        computerTanks = new GameObject[GeneralInfo.numOfIAs];
-        InstantiateTanks(computerTanks, true);
+        computerTanks = new List<GameObject>();
+        InstantiateTanks(computerTanks, GeneralInfo.numOfIAs, true);
 
         Shuffle(playerTanks);
 
@@ -53,14 +51,15 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Time.frameCount > 1 && hasToSetStartState)
+        // Wait for tanks to set their state
+        if (hasToSetStartState && Time.frameCount > 1)
         {
-            for (int i=0; i<playerTanks.Length; i++)
+            for (int i=0; i<playerTanks.Count; i++)
             {
                 playerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
             }
 
-            for (int i=0; i<computerTanks.Length; i++)
+            for (int i=0; i<computerTanks.Count; i++)
             {
                 computerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
             }
@@ -68,6 +67,7 @@ public class GameManager : MonoBehaviour
             hasToSetStartState = false;
         }
 
+        // Activate current player in turn
         if (!hasToSetStartState && currentPlayerGO == null)
         {
             playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(true);
@@ -81,44 +81,50 @@ public class GameManager : MonoBehaviour
             waitingForBullet = true;
         }
 
+        // Wait to be able to shoot
         if (Time.time > timeAbleToShoot && waitingToShoot)
         {
             currentPlayerController.ableToShoot = true;
             waitingToShoot = false;
         }
 
+        // When player shoots and bullets crashes deactivate player and go to next one
         if (
             currentPlayerGO != null && 
-            !currentPlayerController.ableToShoot &&
             !waitingToShoot &&
+            !currentPlayerController.ableToShoot &&
             !waitingForBullet)
         {
+            Debug.Log(message);
+
             playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(false);
             currentPlayerController.enabled = false;
 
             currentPlayerGO = null;
             currentPlayerController = null;
 
-            currentPlayer = (currentPlayer + 1) % playerTanks.Length;
+            currentPlayer = (currentPlayer + 1) % playerTanks.Count;
         }
     }
 
-    void InstantiateTanks(GameObject[] tanksList, bool isEnemy)
+    void InstantiateTanks(List<GameObject> tanksList, int numOfElements, bool isEnemy)
     {
-        for (int i=0; i<tanksList.Length; i++)
+        for (int i=0; i<numOfElements; i++)
         {
             int randomIndex = Random.Range(0, spawnPoints.Count - 1);
             Vector3 spawnPointsPos = spawnPoints[randomIndex].transform.position;
             spawnPoints.RemoveAt(randomIndex);
 
-            tanksList[i] = Instantiate(
-                playerTankPrefab, 
-                new Vector3(
-                    spawnPointsPos.x, 
-                    -2.247196f, 
-                    spawnPointsPos.z
-                ), 
-                transform.rotation
+            tanksList.Add(
+                Instantiate(
+                    playerTankPrefab, 
+                    new Vector3(
+                        spawnPointsPos.x, 
+                        -2.247196f, 
+                        spawnPointsPos.z
+                    ), 
+                    transform.rotation
+                )
             );
 
             tanksList[i].name = isEnemy ? $"Enemy {i+1}" : $"PlayerKit {i+1}";
@@ -139,11 +145,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Shuffle(GameObject[] array)
+    void Shuffle(List<GameObject> array)
     {
-        for (int i = 0; i < array.Length; i++)
+        for (int i = 0; i < array.Count; i++)
         {
-            int random = Random.Range(0, array.Length);
+            int random = Random.Range(0, array.Count);
             GameObject temp = array[random];
             array[random] = array[i];
             array[i] = temp;
