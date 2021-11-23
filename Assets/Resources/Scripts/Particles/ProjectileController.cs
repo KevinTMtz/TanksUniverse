@@ -33,9 +33,7 @@ public class ProjectileController : MonoBehaviour
         forces.y = gravityForce + shootForce.y;
         forces.z = shootForce.z + WindController.Wind.z;
 
-        gameObject.transform.SetParent(transform);
-
-        gameObject.transform.position = currentPos;
+        transform.position = currentPos;
 
         bounces = 0;
     }
@@ -86,7 +84,7 @@ public class ProjectileController : MonoBehaviour
             currentPos = 2 * currentPos - prevPos + accel * dt * dt;
 
             prevPos = tempcurrentPos;
-            gameObject.transform.position = currentPos;
+            transform.position = currentPos;
 
             CollisionFloor();
         }
