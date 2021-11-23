@@ -93,11 +93,7 @@ public class PlayerController : MonoBehaviour
         playerCurrentWeapon = GetComponent<PlayerCurrentWeapon>();
         playerTankInfoUI = GetComponent<PlayerTankInfoUI>();
 
-        playerTankInfoUI.SetTankPositionText(new Vector3(
-            transform.position.x + tankPosDelta.x,
-            transform.position.y,
-            transform.position.z + tankPosDelta.z
-        ));
+        UpdateUI();
 
         ableToShoot = false;
 
@@ -138,12 +134,6 @@ public class PlayerController : MonoBehaviour
                     tankPosDelta.z + deltaMoveZ
                 );
 
-                playerTankInfoUI.SetTankPositionText(new Vector3(
-                    transform.position.x + tankPosDelta.x,
-                    transform.position.y,
-                    transform.position.z + tankPosDelta.z
-                ));
-
                 // Move player camera
                 playerCamera.transform.position = new Vector3(
                     playerCamera.transform.position.x + deltaMoveX,
@@ -178,9 +168,6 @@ public class PlayerController : MonoBehaviour
 
                 ApplyRotationToGO(deltaTankRotAY);
             }
-
-            playerTankInfoUI.SetTankRotationText(tankRotAY);
-            playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
         }
 
         // Rotate tower
@@ -189,8 +176,6 @@ public class PlayerController : MonoBehaviour
             float deltaTowerRotAY = (Input.GetKey("q") ? -1 : 1);
 
             towerRotAY += deltaTowerRotAY;
-
-            playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
 
             ApplyRotationToGO(deltaTowerRotAY);
         }
@@ -205,8 +190,6 @@ public class PlayerController : MonoBehaviour
                 deltaCanonRotAX = maxCanonRotAngle - canonRotAX;
 
             canonRotAX += deltaCanonRotAX;
-
-            playerTankInfoUI.SetCanonRotAXText(canonRotAX);
 
             RotateGOWithPivot(
                 shootPoint,
@@ -253,6 +236,24 @@ public class PlayerController : MonoBehaviour
                 playerCurrentWeapon.CurrentWeapon
             );
         }
+
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        playerTankInfoUI.SetCanonRotAXText(canonRotAX);
+        playerTankInfoUI.SetTankRotationText(tankRotAY);
+        playerTankInfoUI.SetTowerRotationText(towerRotAY, tankRotAY);
+        playerTankInfoUI.SetTankPositionText(
+            new Vector3(
+                transform.position.x + tankPosDelta.x,
+                transform.position.y,
+                transform.position.z + tankPosDelta.z
+            )
+        );
+        playerTankInfoUI.SetWindRotationText(WindController.Angle);
+        playerTankInfoUI.SetWindForceText(WindController.Force);
     }
 
     void ApplyTankTransformations()

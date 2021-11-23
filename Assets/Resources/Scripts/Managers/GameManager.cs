@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,8 +20,6 @@ public class GameManager : MonoBehaviour
     private GameObject currentPlayerGO;
     private PlayerController currentPlayerController;
 
-    private bool hasToSetStartState;
-
     private float timeAbleToShoot;
     private bool waitingToShoot;
 
@@ -28,8 +27,20 @@ public class GameManager : MonoBehaviour
 
     public string message;
     
+    private GameObject lastCamera;
+    private GameObject lastUI;
+
+    private float timeToNextTurn;
+
+    public int PlayersLeft
+    {
+        get { return playerTanks.Count; }
+    }
+
     void Start()
     {
+        Time.timeScale = 1;
+
         spawnPoints = new List<GameObject>();
         for (int i=0; i<spawnPointsGO.transform.childCount; i++)
         {
@@ -46,7 +57,6 @@ public class GameManager : MonoBehaviour
         
         Shuffle(playerTanks);
 
-        hasToSetStartState = true;
         currentPlayer = 0;
         currentPlayerGO = null;
         currentPlayerController = null;
@@ -54,26 +64,22 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Wait for tanks to set their state
-        if (hasToSetStartState && Time.frameCount > 1)
-        {
-            for (int i=0; i<playerTanks.Count; i++)
-            {
-                playerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
-            }
-
-            for (int i=0; i<computerTanks.Count; i++)
-            {
-                computerTanks[i].transform.Find("PlayerTank").GetComponent<PlayerController>().enabled = false;
-            }
-
-            hasToSetStartState = false;
-        }
-
         // Activate current player in turn
-        if (!hasToSetStartState && currentPlayerGO == null)
+        if (currentPlayerGO == null && Time.time > timeToNextTurn)
         {
-            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(true);
+            if (lastCamera) lastCamera.SetActive(false);
+            if (lastUI) 
+            {   
+                GameObject uiMessage = lastUI.transform.Find("HitOrMiss").gameObject;
+                uiMessage.SetActive(false);
+                lastUI.SetActive(false);
+            }
+
+            lastCamera = playerTanks[currentPlayer].transform.Find("Back Camera").gameObject;
+            lastCamera.SetActive(true);
+
+            lastUI = playerTanks[currentPlayer].transform.Find("PlayerUI").gameObject;
+            lastUI.SetActive(true);
 
             currentPlayerGO = playerTanks[currentPlayer].transform.Find("PlayerTank").gameObject;
             currentPlayerController = currentPlayerGO.GetComponent<PlayerController>();
@@ -84,6 +90,8 @@ public class GameManager : MonoBehaviour
             waitingForBullet = true;
 
             message = "Miss!";
+
+            WindController.SetRandomWind();
         }
 
         // Wait to be able to shoot
@@ -100,21 +108,31 @@ public class GameManager : MonoBehaviour
             !currentPlayerController.ableToShoot &&
             !waitingForBullet)
         {
-            Debug.Log(message);
+            GameObject uiMessage = playerTanks[currentPlayer].transform.Find("PlayerUI").Find("HitOrMiss").gameObject;
+            uiMessage.SetActive(true);
+            uiMessage.GetComponent<Text>().text = message;
 
-            playerTanks[currentPlayer].transform.Find("Back Camera").gameObject.SetActive(false);
             currentPlayerController.enabled = false;
 
             currentPlayerGO = null;
             currentPlayerController = null;
 
             currentPlayer = (currentPlayer + 1) % playerTanks.Count;
+
+            if (playerTanks[currentPlayer] == null)
+            {
+                playerTanks.RemoveAt(currentPlayer);
+                currentPlayer = currentPlayer % playerTanks.Count;
+            }
+
+            timeToNextTurn = Time.time + 2;
         }
 
         if (projectileController)
         {
             foreach (var tank in playerTanks)
             {
+                if (tank == null) break;
                 GameObject playerTank = tank.transform.Find("PlayerTank").gameObject;
                 if (projectileController.CheckCollision(playerTank.GetComponent<PlayerController>()))
                 {
@@ -151,11 +169,13 @@ public class GameManager : MonoBehaviour
             tanksList[i].name = isEnemy ? $"Enemy {i+1}" : $"PlayerKit {i+1}";
 
             tanksList[i].transform.Find("Back Camera").gameObject.SetActive(false);
+            tanksList[i].transform.Find("PlayerUI").gameObject.SetActive(false);
 
             GameObject playerTank = tanksList[i].transform.Find("PlayerTank").gameObject;
 
             PlayerController playerController = playerTank.GetComponent<PlayerController>();
             playerController.TankRotAY = Random.Range(0, 359);
+            playerController.enabled = false;
 
             string[] partStrArr = new string[]{"Body", "Tower", "Canon"};
             for (int j=0; j<partStrArr.Length; j++)
