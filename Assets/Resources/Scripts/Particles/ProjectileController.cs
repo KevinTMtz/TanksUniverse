@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
+    public int damage;
     public float mass;
     public float r;
 
